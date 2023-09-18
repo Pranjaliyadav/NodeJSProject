@@ -1,4 +1,4 @@
-var name = 'Max'
+ var name = 'Max'
 var age = 20;
 var hasHobbies = true
 

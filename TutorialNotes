@@ -1,0 +1,7 @@
+Strean and buffers
+
+stream is an ongoing process
+request is read by node in chunks
+
+buffer is like a bus stop
+construct allowing to hold multiple chunks and work on them and leave when theyre done
