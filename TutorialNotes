@@ -55,5 +55,7 @@ close callbacks - execute all close event callbacks
 process.exit
 
 
+client -> request -> server -> response -> client
+
 
 
