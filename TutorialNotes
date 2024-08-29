@@ -29,3 +29,31 @@ https - launch a SSL server
 // http.createServer((req, res)=>{})
 
 Event loop - in node app, keeps on running as long as there are event listeners registered
+
+
+node js only uses 1 thread, how to handle multiple requests
+security issues?
+
+event loop starts when code is started automatically
+handling event callbacks 
+
+worker pool - do the heavy lifting, runs on diff thread, can connect with OS, totally detached from code and event loop
+
+when worker is done, it will trigger callback
+
+all this is built in
+
+timers - execute setTimeour, setInterval callbacks
+pending callbacks - execute I/O related callbacks that were deferred
+
+poll - reteruve new io events execute their callbacks
+
+check - execute setImmediate() callbacks
+
+close callbacks - execute all close event callbacks
+
+process.exit
+
+
+
+
