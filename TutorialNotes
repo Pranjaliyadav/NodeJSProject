@@ -58,4 +58,6 @@ process.exit
 client -> request -> server -> response -> client
 
 
+run npm start
+"start": "nodemon app.js"
 
