@@ -61,3 +61,15 @@ client -> request -> server -> response -> client
 run npm start
 "start": "nodemon app.js"
 
+expressJs framework on top of nodejs 
+
+framework - set of helper fn, tools and rules that help build application
+alternative to expressjs - vanilla nodejs, adonis.js, koa, sails.js
+
+npm i --save express
+
+Middlware - split code and run thorugh multiple fn
+
+
+
+
