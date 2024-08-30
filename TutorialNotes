@@ -75,3 +75,6 @@ requests go from top to bottom
 views will have bunch of html files
 
 module.exports = path.dirname(require.main.filename);
+
+template engines - dynamuc html content
+in pug, indentation matters
