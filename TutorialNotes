@@ -78,3 +78,10 @@ module.exports = path.dirname(require.main.filename);
 
 template engines - dynamuc html content
 in pug, indentation matters
+
+MVC
+separation of concers
+Models Views Controllers
+Models - represent your data in your code, work with ur data eg save , fetch
+Views - what user sees, decoupled from app code
+controllers - connecting models and views, contain in-between logic
