@@ -1,35 +1,33 @@
+const path = require('path');
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const path = require('path')
+const express = require('express');
+const bodyParser = require('body-parser');
+const expressHbs = require('express-handlebars');
 
-const adminRoute = require('./routes/admin')
-const shopRoutes = require('./routes/shop')
-const expressHbs = require('express-handlebars')
+const app = express();
 
+app.engine(
+  'hbs',
+  expressHbs({
+    layoutsDir: 'views/layouts/',
+    defaultLayout: 'main-layout',
+    extname: 'hbs'
+  })
+);
+app.set('view engine', 'hbs');
+app.set('views', 'views');
 
-const app = express()
+const adminData = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
-app.engine('hbs', expressHbs()) //initialises engine
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-//set global config values
-app.set('view engine', 'hbs') //use this handlebars template engine
-app.set('views', 'views')
+app.use('/admin', adminData.routes);
+app.use(shopRoutes);
 
-//serve static files with this like CSS
-app.use(express.static(path.join(__dirname, 'public')))
+app.use((req, res, next) => {
+  res.status(404).render('404', { pageTitle: 'Page Not Found' });
+});
 
-
-app.use(bodyParser.urlencoded({ extended: false }))
-
-app.use('/admin', adminRoute.routes) //only routes starting with /admin will go in adminRoutes
-
-app.use(shopRoutes)
-
-app.use((req, res, next)=>{
-    //for handling incorrect routes
-     res.status(404).render('404')
-
-})
-
-app.listen(3000) 
+app.listen(3000);
