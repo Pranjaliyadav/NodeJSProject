@@ -7,6 +7,10 @@ const adminRoute = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
 const app = express()
 
+//serve static files with this like CSS
+app.use(express.static(path.join(__dirname, 'public')))
+
+
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use('/admin', adminRoute) //only routes starting with /admin will go in adminRoutes
