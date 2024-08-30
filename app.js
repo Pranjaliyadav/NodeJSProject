@@ -5,10 +5,15 @@ const path = require('path')
 
 const adminRoute = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
+const expressHbs = require('express-handlebars')
+
+
 const app = express()
 
+app.engine('hbs', expressHbs()) //initialises engine
+
 //set global config values
-app.set('view engine', 'pug') //use this pug template engine
+app.set('view engine', 'hbs') //use this handlebars template engine
 app.set('views', 'views')
 
 //serve static files with this like CSS
