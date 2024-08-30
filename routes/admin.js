@@ -1,21 +1,23 @@
-const express = require('express')
-const path = require('path')
-const router = express.Router()
+const path = require('path');
 
-const rootDir = require('../utils/path')
+const express = require('express');
 
-const products = []
+const rootDir = require('../util/path');
 
+const router = express.Router();
+
+const products = [];
+
+// /admin/add-product => GET
 router.get('/add-product', (req, res, next) => {
-    console.log("In random page")
-    res.render('add-product', {pageTitle : 'Add Product'})
-})
+  res.render('add-product', { pageTitle: 'Add Product', path: '/admin/add-product' });
+});
 
+// /admin/add-product => POST
 router.post('/add-product', (req, res, next) => {
-    products.push({title : req.body.title})
-    console.log("In product page",products)
-    res.redirect('/')
-})
+  products.push({ title: req.body.title });
+  res.redirect('/');
+});
 
-exports.routes = router
-exports.products = products
+exports.routes = router;
+exports.products = products;
