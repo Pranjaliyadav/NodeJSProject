@@ -70,6 +70,7 @@ npm i --save express
 
 Middlware - split code and run thorugh multiple fn
 
+requests go from top to bottom
 
 
 
