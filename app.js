@@ -1,17 +1,26 @@
 
 const express = require('express')
 
-const app = express() 
+const app = express()
 
-//allows us to use multiple middleware function
-app.use((req, res, next)=>{
-    console.log("In the middleware")
-    next() //to go to next middleware fn in line
+app.use('/', (req, res, next) => {
+    console.log("Alwys runs")
+    next()
+})
+app.use('/add-product', (req, res, next) => {
+    console.log("In add product page")
+    res.send('<form action="/product" method = "POST" ><input type="text" name=  "title"><button type="submit">Submit</button></form>')
 })
 
-app.use((req, res, next) => {
-    console.log("In the another middleware")
+app.use('/product', (req, res, next) => {
+    console.log("In product page", req.body)
+    res.redirect('/')
     res.send("<h1>Hello another</h1>")
+})
+
+app.use('/', (req, res, next) => {
+    console.log("In random page")
+    res.send("<h1>Hello random page</h1>")
 })
 
 app.listen(3000) 
