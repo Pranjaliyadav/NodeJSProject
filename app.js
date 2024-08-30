@@ -9,7 +9,7 @@ const app = express()
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.use(adminRoute)
+app.use('/admin', adminRoute) //only routes starting with /admin will go in adminRoutes
 
 app.use(shopRoutes)
 
