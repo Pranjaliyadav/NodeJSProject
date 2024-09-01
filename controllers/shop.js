@@ -1,7 +1,7 @@
-const ProductClass = require('../models/product');
+const Product = require('../models/product');
 
 exports.getProducts = (req, res, next) => {
-  ProductClass.fetchAll(products => {
+  Product.fetchAll(products => {
     res.render('shop/product-list', {
       prods: products,
       pageTitle: 'All Products',
@@ -11,24 +11,18 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
-  const productId = req.params.productId
-  ProductClass.findById(productId, productFound => {
-    console.log("here productId", productId, productFound, {
-      product: productFound,
-      pageTitle: productFound.title,
+  const prodId = req.params.productId;
+  Product.findById(prodId, product => {
+    res.render('shop/product-detail', {
+      product: product,
+      pageTitle: product.title,
       path: '/products'
-    })
-    res.render('shop/product-detail',
-     { product: productFound ,
-       pageTitle : productFound.title,
-        path : '/products' })
-  
-  })
-  res.redirect('/')
-}
+    });
+  });
+};
 
 exports.getIndex = (req, res, next) => {
-  ProductClass.fetchAll(products => {
+  Product.fetchAll(products => {
     res.render('shop/index', {
       prods: products,
       pageTitle: 'Shop',
