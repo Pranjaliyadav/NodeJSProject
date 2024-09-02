@@ -1,5 +1,5 @@
 const Product = require('../models/product');
-const CartModel = require('../models/cart')
+const CartModel = require('../models/cart');
 exports.getProducts = (req, res, next) => {
   Product.fetchAll(products => {
     res.render('shop/product-list', {
@@ -32,15 +32,38 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  res.render('shop/cart', {
-    path: '/cart',
-    pageTitle: 'Your Cart'
-  });
+  debugger
+  CartModel.getCartProducts(cart => {
+    const cartProducts = []
+    console.log("heer 1")
+    Product.fetchAll(products => {
+      for (const prod of products) {
+        if (cart && cart.products) {
+
+          const cartProdData = cart.products.find(p => p.id === prod.id)
+          if (cartProdData) {
+            cartProducts.push({ productData: prod, qty: cartProdData.qty })
+            console.log("heer 2", cartProducts)
+
+          }
+        }
+        else {
+          return
+        }
+      }
+      console.log("here yes 222", cartProducts)
+      res.render('shop/cart', {
+        path: '/cart',
+        pageTitle: 'Your Cart',
+        products: cartProducts
+      });
+    })
+  })
 };
 
-exports.postCart = (req, res, next) =>{
+exports.postCart = (req, res, next) => {
   const prodId = req.body.productId
-  Product.findById(prodId, (product)=>{
+  Product.findById(prodId, (product) => {
     CartModel.addProduct(prodId, product.price)
   })
   console.log("here productId", prodId)
@@ -59,4 +82,6 @@ exports.getCheckout = (req, res, next) => {
     path: '/checkout',
     pageTitle: 'Checkout'
   });
+
+
 };
