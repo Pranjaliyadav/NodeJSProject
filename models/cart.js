@@ -57,8 +57,9 @@ module.exports = class Cart {
                 fs.writeFile(p, JSON.stringify(cart), err => {
                     console.log(err);
                 });
-                console.log("here parse pod", cart )
+                console.log("here parse pod", cart)
             }
+            return
         })
     }
 
@@ -66,7 +67,7 @@ module.exports = class Cart {
         fs.readFile(p, (err, fileContent) => {
             if (err) {
                 // If the file is not found or there is any error, return null
-           
+
                 cb(null);
             } else {
                 try {
@@ -79,7 +80,7 @@ module.exports = class Cart {
                     }
                 } catch (parseErr) {
                     // If there is a parsing error (e.g., invalid JSON), return null
-                
+
                     cb(null);
                 }
             }
