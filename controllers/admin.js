@@ -1,12 +1,9 @@
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
-  res.render('admin/add-product', {
+  res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     path: '/admin/add-product',
-    formsCSS: true,
-    productCSS: true,
-    activeAddProduct: true
   });
 };
 
@@ -19,6 +16,25 @@ exports.postAddProduct = (req, res, next) => {
   product.save();
   res.redirect('/');
 };
+
+exports.getEditProduct = (req, res, next) => {
+  debugger
+  const editMode = req.query.edit
+  console.log("here editMode", editMode)
+
+  if (editMode) {
+
+    res.render('admin/edit-product', {
+      pageTitle: 'Add Product',
+      path: '/admin/edit-product',
+      editing: editMode  //since we are using same view for add and edit, bool to diff them
+    });
+  }
+  else {
+    return res.redirect('/')
+  }
+};
+
 
 exports.getProducts = (req, res, next) => {
   Product.fetchAll(products => {
