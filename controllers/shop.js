@@ -35,7 +35,6 @@ exports.getCart = (req, res, next) => {
   debugger
   CartModel.getCartProducts(cart => {
     const cartProducts = []
-    console.log("heer 1")
     Product.fetchAll(products => {
       for (const prod of products) {
         if (cart && cart.products) {
@@ -43,7 +42,7 @@ exports.getCart = (req, res, next) => {
           const cartProdData = cart.products.find(p => p.id === prod.id)
           if (cartProdData) {
             cartProducts.push({ productData: prod, qty: cartProdData.qty })
-            console.log("heer 2", cartProducts)
+
 
           }
         }
@@ -51,7 +50,6 @@ exports.getCart = (req, res, next) => {
           return
         }
       }
-      console.log("here yes 222", cartProducts)
       res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
@@ -85,3 +83,13 @@ exports.getCheckout = (req, res, next) => {
 
 
 };
+
+exports.postCartDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId
+
+  Product.findById(prodId, product => {
+    console.log("prodPricning", prodId, product)
+    CartModel.deleteProduct(prodId, product.price)
+    res.redirect('/cart')
+  })
+}
