@@ -21,18 +21,14 @@ exports.getEditProduct = (req, res, next) => {
   debugger
   const editMode = req.query.edit
   console.log("here editMode", editMode)
-
-  if (editMode) {
-
-    res.render('admin/edit-product', {
-      pageTitle: 'Add Product',
-      path: '/admin/edit-product',
-      editing: editMode  //since we are using same view for add and edit, bool to diff them
-    });
-  }
-  else {
+  if(!editMode){
     return res.redirect('/')
   }
+  res.render('admin/edit-product',{
+    pageTitle : 'Edit Product',
+    path : '/admin/edit-product',
+    editing : editMode
+  })
 };
 
 
