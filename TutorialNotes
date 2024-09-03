@@ -85,3 +85,28 @@ Models Views Controllers
 Models - represent your data in your code, work with ur data eg save , fetch
 Views - what user sees, decoupled from app code
 controllers - connecting models and views, contain in-between logic
+
+
+SQL vs NoSQL - store data and make it easily accessible
+
+quicker access than with a file
+sql db eg - MySQL
+NoSQL DB - MongoDB
+
+core SQL db characteristic - data schema, data relations
+
+SQL queries
+SELECT * FROM users WHERE age > 38
+
+NoSQL 
+databse , collections(tables), documents(like data, but in JSON like format, they are schemaless, differnt structure can be there in single collection)
+we dont hav eany relation, we look for duplicate data
+
+Horizontal vs vertical scaling
+HS - add more servers(and merge data in 1 DB)
+
+VS - improve server capacity/hardware
+
+SQL - data uses schemas, relations, data is distributed across multiple tables, horizontal scaling is difficult, vertical is possible
+
+NoSQL - schema less, no(v few) relations, data is typically merged/nested in afew collections, both Hori and ver scaling possible, great performance for mass read & write requests
