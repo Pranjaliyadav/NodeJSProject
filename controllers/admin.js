@@ -1,3 +1,4 @@
+const { error } = require('console');
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
@@ -14,8 +15,10 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
   const product = new Product(null, title, imageUrl, description, price);
-  product.save();
-  res.redirect('/');
+  product.save().then(() => {
+    res.redirect('/');
+  }).catch(error => console.log(error))
+
 };
 
 exports.getEditProduct = (req, res, next) => {
@@ -61,7 +64,7 @@ exports.getProducts = (req, res, next) => {
   });
 };
 
-exports.postDeleteProduct = (req, res, next) =>{
+exports.postDeleteProduct = (req, res, next) => {
   const productId = req.body.productId
   Product.deleteById(productId)
   res.redirect('/admin/products')
