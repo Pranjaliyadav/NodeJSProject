@@ -112,3 +112,8 @@ SQL - data uses schemas, relations, data is distributed across multiple tables, 
 NoSQL - schema less, no(v few) relations, data is typically merged/nested in afew collections, both Hori and ver scaling possible, great performance for mass read & write requests
 npm i --save mysql2
 
+
+Sequelize - Object Relational Mapping Library
+
+ npm i --save sequelize
+ 
