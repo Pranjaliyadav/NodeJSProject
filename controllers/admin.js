@@ -23,6 +23,7 @@ exports.postAddProduct = (req, res, next) => {
   }).then(
     result => {
       console.log(result)
+      res.redirect('/admin/products')
     }
   )
     .catch(error => {
@@ -90,6 +91,15 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const productId = req.body.productId
-  Product.deleteById(productId)
-  res.redirect('/admin/products')
+  Product.findByPk(productId)
+    .then(
+      prod => { return prod.destroy() } //.destroy to delete some row in sqlz
+    )
+    .then(result => {
+      console.log('deleted product')
+      res.redirect('/admin/products')
+
+    })
+    .catch(err => console.error(err)
+    )
 }
