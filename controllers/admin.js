@@ -39,7 +39,7 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect('/')
   }
   const prodId = req.params.productId
-  Product.findById(prodId, prodFound => {
+  Product.findByPk(prodId).then(prodFound => {
     if (!prodFound) {
       return res.redirect('/')
     }
@@ -51,6 +51,7 @@ exports.getEditProduct = (req, res, next) => {
       product: prodFound
     })
   })
+    .catch(err => console.error(err))
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -59,9 +60,21 @@ exports.postEditProduct = (req, res, next) => {
   const updatedPrice = req.body.price
   const updatedImageUrl = req.body.imageUrl
   const updatedDescription = req.body.description
-  const updatedProduct = new Product(prodId, updatedTitle, updatedImageUrl, updatedDescription, updatedPrice)
-  updatedProduct.save()
-  res.redirect('/admin/products')
+
+  Product.findByPk(prodId)
+    .then(result => {
+      result.title = updatedTitle
+      result.imageUrl = updatedImageUrl
+      result.price = updatedPrice
+      result.description = updatedDescription
+      return result.save()
+    })
+    .then(result => {
+      console.log("updated product")
+      res.redirect('/admin/products')
+    })
+    .catch(err => console.error(err))
+
 }
 
 exports.getProducts = (req, res, next) => {
