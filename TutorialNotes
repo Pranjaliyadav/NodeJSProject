@@ -117,3 +117,4 @@ Sequelize - Object Relational Mapping Library
 
  npm i --save sequelize
  
+ With Sequelize v5, findById() (old) was replaced by findByPk()

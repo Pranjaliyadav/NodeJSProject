@@ -1,17 +1,14 @@
 const Product = require('../models/product');
 const CartModel = require('../models/cart');
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll().then(
-    ([rows, fieldData]) => {
-
-      res.render('shop/product-list', {
-        prods: rows,
-        pageTitle: 'All Products',
-        path: '/products'
-      });
-    }
-  ).catch(error => console.error("Here error getting index", error));
-
+  //sequelize method to fetch data
+  Product.findAll().then(result => {
+    res.render('shop/product-list', {
+      prods: result,
+      pageTitle: 'All Products',
+      path: '/products'
+    });
+  }).catch(err => console.err(err))
 };
 
 exports.getProduct = (req, res, next) => {
@@ -28,16 +25,15 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll().then(
-    ([rows, fieldData]) => {
 
-      res.render('shop/index', {
-        prods: rows,
-        pageTitle: 'Shop',
-        path: '/'
-      });
-    }
-  ).catch(error => console.error("Here error getting index", error));
+  //sequelize method to fetch data
+  Product.findAll().then(result => {
+    res.render('shop/index', {
+      prods: result,
+      pageTitle: 'Shop',
+      path: '/'
+    });
+  }).catch(err => console.err(err))
 };
 
 exports.getCart = (req, res, next) => {
