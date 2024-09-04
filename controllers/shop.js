@@ -15,6 +15,7 @@ exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
   Product.findByPk(prodId).then(
     (rows) => {
+      console.log("here gett", prodId, rows)
       res.render('shop/product-detail', {
         product: rows,
         pageTitle: rows?.title,
@@ -22,17 +23,6 @@ exports.getProduct = (req, res, next) => {
       });
     }
   ).catch(error => console.log(error));
-
-  // Product.findAll({ where: { id: prodId } })
-  //   .then(product => {
-  //     console.log("here title", product, prodId)
-  //     res.render('shop/product-detail', {
-  //       product: product[0],
-  //       pageTitle: product[0]?.title,
-  //       path: '/products'
-  //     });
-  //   })
-  //   .catch(err => console.error(err))
 };
 
 exports.getIndex = (req, res, next) => {
