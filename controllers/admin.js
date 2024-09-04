@@ -14,14 +14,17 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  Product.create({
-    title: title,
-    price: price,
-    imageUrl: imageUrl,
-    description: description,
-    userId : req.user.id
 
-  }).then(
+  //this will also create a connected model
+  req.user.createProduct(
+    {
+      title: title,
+      price: price,
+      imageUrl: imageUrl,
+      description: description,
+
+    }
+  ).then(
     result => {
       console.log(result)
       res.redirect('/admin/products')
@@ -41,18 +44,21 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect('/')
   }
   const prodId = req.params.productId
-  Product.findByPk(prodId).then(prodFound => {
-    if (!prodFound) {
-      return res.redirect('/')
-    }
+  req.user.getProducts({ where: { id: prodId } })
+    // Product.findByPk(prodId)
+    .then(prod => {
+      const prodFound = prod[0]
+      if (!prodFound) {
+        return res.redirect('/')
+      }
 
-    res.render('admin/edit-product', {
-      pageTitle: 'Edit Product',
-      path: '/admin/edit-product',
-      editing: editMode,
-      product: prodFound
+      res.render('admin/edit-product', {
+        pageTitle: 'Edit Product',
+        path: '/admin/edit-product',
+        editing: editMode,
+        product: prodFound
+      })
     })
-  })
     .catch(err => console.error(err))
 };
 
@@ -80,14 +86,15 @@ exports.postEditProduct = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
-
-  Product.findAll().then(result => {
-    res.render('admin/products', {
-      prods: result,
-      pageTitle: 'Admin Products',
-      path: '/admin/products'
-    });
-  }).catch(err => console.error(err));
+  req.user.getProducts()
+    // Product.findAll()
+    .then(result => {
+      res.render('admin/products', {
+        prods: result,
+        pageTitle: 'Admin Products',
+        path: '/admin/products'
+      });
+    }).catch(err => console.error(err));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
