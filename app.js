@@ -45,8 +45,8 @@ ProductModel.belongsToMany(CartModel, { through: CartItemModel })
 
 //sync table with db
 sequelize
-    .sync({force : true})
-    // .sync()
+    // .sync({force : true})
+    .sync()
     .then(result => {
         return UserModel.findByPk(1)
     })
