@@ -38,40 +38,52 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  debugger
-  CartModel.getCartProducts(cart => {
-    const cartProducts = []
-    Product.fetchAll(products => {
-      for (const prod of products) {
-        if (cart && cart.products) {
-
-          const cartProdData = cart.products.find(p => p.id === prod.id)
-          if (cartProdData) {
-            cartProducts.push({ productData: prod, qty: cartProdData.qty })
-
-
-          }
-        }
-        else {
-          return
-        }
-      }
-      res.render('shop/cart', {
-        path: '/cart',
-        pageTitle: 'Your Cart',
-        products: cartProducts
-      });
+  req.user.getCart()
+    .then(cart => {
+      console.log("here cart", cart)
+      return cart.getProducts().then(cartProducts => {
+        res.render('shop/cart', {
+          path: '/cart',
+          pageTitle: 'Your Cart',
+          products: cartProducts
+        });
+      })
+        .catch(err => console.log(err))
     })
-  })
+    .catch(err => console.log(err))
+  
 };
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId
-  Product.findById(prodId, (product) => {
-    CartModel.addProduct(prodId, product.price)
-  })
-  console.log("here productId", prodId)
-  res.redirect('/cart')
+  let fetchedCart
+  req.user.getCart()
+    .then(cart => {
+      fetchedCart = cart
+      return cart.getProducts({ where: { id: prodId } })
+
+    })
+    .then(prodFound => {
+      let product
+      if (prodFound.length > 0) {
+        product = prodFound[0]
+      }
+      let newQty = 1
+      if (product) {
+        //...
+      }
+      return Product.findByPk(prodId)
+        .then(prod => {
+          return fetchedCart.addProduct(prod, { through: { quantity: newQty } })
+        })
+        .then(added => {
+          console.log("here added", added)
+          res.redirect('/cart')
+
+        })
+        .catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
 }
 
 exports.getOrders = (req, res, next) => {

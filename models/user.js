@@ -2,7 +2,7 @@ const SequelizeInstance = require('sequelize')
 
 const sequelize = require('../util/database')
 
-//creating Product table
+//creating User table
 const User = sequelize.define('user', {
     id: {
         type: SequelizeInstance.INTEGER,
