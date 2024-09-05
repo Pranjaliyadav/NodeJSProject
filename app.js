@@ -16,6 +16,9 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const CartModel = require('./models/cart');
 const CartItemModel = require('./models/cart-item');
+const OrderModel = require('./models/order');
+const OrderItemModel = require('./models/order-item');
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -40,8 +43,12 @@ ProductModel.belongsTo(UserModel, { constraints: true, onDelete: 'CASCADE' })
 UserModel.hasMany(ProductModel)
 UserModel.hasOne(CartModel)
 CartModel.belongsTo(UserModel)
-CartModel.belongsToMany(ProductModel, {through : CartItemModel})
+CartModel.belongsToMany(ProductModel, { through: CartItemModel })
 ProductModel.belongsToMany(CartModel, { through: CartItemModel })
+OrderModel.belongsTo(UserModel)
+UserModel.hasMany(OrderModel)
+OrderModel.belongsToMany(ProductModel, { through: OrderItemModel })
+
 
 //sync table with db
 sequelize
