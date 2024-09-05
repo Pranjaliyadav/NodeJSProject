@@ -69,7 +69,7 @@ exports.postCart = (req, res, next) => {
       if (prodFound.length > 0) {
         product = prodFound[0]
       }
-      
+
       if (product) {
         const oldQty = product.cartItem.quantity
         newQty = oldQty + 1
@@ -77,18 +77,18 @@ exports.postCart = (req, res, next) => {
       }
       return Product.findByPk(prodId)
     })
-        .then(product => {
-          return fetchedCart.addProduct(product, {
-            through: { quantity: newQty }
-          })
-        })
-        .then(added => {
-          console.log("here added", added)
-          res.redirect('/cart')
+    .then(product => {
+      return fetchedCart.addProduct(product, {
+        through: { quantity: newQty }
+      })
+    })
+    .then(added => {
+      console.log("here added", added)
+      res.redirect('/cart')
 
-        })
-        .catch(err => console.log(err))
-   
+    })
+    .catch(err => console.log(err))
+
 
     .catch(err => console.log(err))
 }
@@ -111,10 +111,17 @@ exports.getCheckout = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId
+  req.user.getCart()
+    .then(cart => {
+      return cart.getProducts({ where: { id: prodId } })
+    })
+    .then(products => {
+      const prod = products[0]
+      return prod.cartItem.destroy()
+    })
+    .then(result => {
+      res.redirect('/cart')
+    })
+    .catch(err => console.log(err))
 
-  Product.findById(prodId, product => {
-    console.log("prodPricning", prodId, product)
-    CartModel.deleteProduct(prodId, product.price)
-    res.redirect('/cart')
-  })
 }
