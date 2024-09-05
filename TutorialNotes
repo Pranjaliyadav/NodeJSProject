@@ -121,3 +121,12 @@ Sequelize - Object Relational Mapping Library
 
  Association  (relation ) -> 
  relate diff models and communicate
+
+ MongoDB
+ DB engine, for noSQL databases
+ store and work on lots and lots of data
+ multiple collections,
+ having documents, schemaless
+ uses JSON to store data in collection
+ BSON(binary JSON)
+ 
