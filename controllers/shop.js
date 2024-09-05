@@ -51,12 +51,13 @@ exports.getCart = (req, res, next) => {
         .catch(err => console.log(err))
     })
     .catch(err => console.log(err))
-  
+
 };
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId
   let fetchedCart
+  let newQty = 1
   req.user.getCart()
     .then(cart => {
       fetchedCart = cart
@@ -68,13 +69,18 @@ exports.postCart = (req, res, next) => {
       if (prodFound.length > 0) {
         product = prodFound[0]
       }
-      let newQty = 1
+      
       if (product) {
-        //...
+        const oldQty = product.cartItem.quantity
+        newQty = oldQty + 1
+        return product
       }
       return Product.findByPk(prodId)
-        .then(prod => {
-          return fetchedCart.addProduct(prod, { through: { quantity: newQty } })
+    })
+        .then(product => {
+          return fetchedCart.addProduct(product, {
+            through: { quantity: newQty }
+          })
         })
         .then(added => {
           console.log("here added", added)
@@ -82,7 +88,8 @@ exports.postCart = (req, res, next) => {
 
         })
         .catch(err => console.log(err))
-    })
+   
+
     .catch(err => console.log(err))
 }
 
