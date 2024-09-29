@@ -11,3 +11,122 @@ Types of errors
 -syntax error 
 -runtime error
 -logical errors
+
+HTTP hyper text transfer protocol
+
+HTTPS -  Http secure ( httpm + data encryption )
+
+core modules - http, https, fs, path, os
+http - launch a server, send requests
+https - launch a SSL server
+
+
+//other ways to write this
+// http.createServer(function(req, res){
+
+// })
+
+// http.createServer((req, res)=>{})
+
+Event loop - in node app, keeps on running as long as there are event listeners registered
+
+
+node js only uses 1 thread, how to handle multiple requests
+security issues?
+
+event loop starts when code is started automatically
+handling event callbacks 
+
+worker pool - do the heavy lifting, runs on diff thread, can connect with OS, totally detached from code and event loop
+
+when worker is done, it will trigger callback
+
+all this is built in
+
+timers - execute setTimeour, setInterval callbacks
+pending callbacks - execute I/O related callbacks that were deferred
+
+poll - reteruve new io events execute their callbacks
+
+check - execute setImmediate() callbacks
+
+close callbacks - execute all close event callbacks
+
+process.exit
+
+
+client -> request -> server -> response -> client
+
+
+run npm start
+"start": "nodemon app.js"
+
+expressJs framework on top of nodejs 
+
+framework - set of helper fn, tools and rules that help build application
+alternative to expressjs - vanilla nodejs, adonis.js, koa, sails.js
+
+npm i --save express
+
+Middlware - split code and run thorugh multiple fn
+
+requests go from top to bottom
+
+views will have bunch of html files
+
+module.exports = path.dirname(require.main.filename);
+
+template engines - dynamuc html content
+in pug, indentation matters
+
+MVC
+separation of concers
+Models Views Controllers
+Models - represent your data in your code, work with ur data eg save , fetch
+Views - what user sees, decoupled from app code
+controllers - connecting models and views, contain in-between logic
+
+
+SQL vs NoSQL - store data and make it easily accessible
+
+quicker access than with a file
+sql db eg - MySQL
+NoSQL DB - MongoDB
+
+core SQL db characteristic - data schema, data relations
+
+SQL queries
+SELECT * FROM users WHERE age > 38
+
+NoSQL 
+databse , collections(tables), documents(like data, but in JSON like format, they are schemaless, differnt structure can be there in single collection)
+we dont hav eany relation, we look for duplicate data
+
+Horizontal vs vertical scaling
+HS - add more servers(and merge data in 1 DB)
+
+VS - improve server capacity/hardware
+
+SQL - data uses schemas, relations, data is distributed across multiple tables, horizontal scaling is difficult, vertical is possible
+
+NoSQL - schema less, no(v few) relations, data is typically merged/nested in afew collections, both Hori and ver scaling possible, great performance for mass read & write requests
+npm i --save mysql2
+
+
+Sequelize - Object Relational Mapping Library
+
+ npm i --save sequelize
+ 
+ With Sequelize v5, findById() (old) was replaced by findByPk()
+
+ Association  (relation ) -> 
+ relate diff models and communicate
+
+ MongoDB
+ DB engine, for noSQL databases
+ store and work on lots and lots of data
+ multiple collections,
+ having documents, schemaless
+ uses JSON to store data in collection
+ BSON(binary JSON)
+ 
