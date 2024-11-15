@@ -142,3 +142,4 @@ add your user with password, this user password can access collection then
 add your ip, by default it will be added and white listed, these whitelisted ip address can access your cluster's services.
  install the mongoDB driver
  npm i --save mongodb
+ pass- xfhsWKnmLqenYFRX
