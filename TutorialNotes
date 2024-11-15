@@ -130,3 +130,15 @@ Sequelize - Object Relational Mapping Library
  uses JSON to store data in collection
  BSON(binary JSON)
  
+ nosql characteristics
+ no data schema - no structure required
+ fewer data relations - can relate documents but you dont have to , use embedded document
+
+ use mongodb atlas - cloud based
+ create cluster
+ choose free version
+then go to security 
+add your user with password, this user password can access collection then
+add your ip, by default it will be added and white listed, these whitelisted ip address can access your cluster's services.
+ install the mongoDB driver
+ npm i --save mongodb

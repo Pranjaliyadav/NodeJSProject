@@ -77,4 +77,3 @@ allows to define models and interact with db thru them
 set up relations(Associations) and interact with related models through them
 
 
-
