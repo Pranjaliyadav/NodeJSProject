@@ -143,3 +143,6 @@ add your ip, by default it will be added and white listed, these whitelisted ip 
  install the mongoDB driver
  npm i --save mongodb
  pass- xfhsWKnmLqenYFRX
+
+ doc mongodb crud operation - https://www.mongodb.com/docs/manual/crud/?msockid=1e032706fa4a60dd2ebf35c2fb4c6144
+db.collection('products').insertOne() or .insertMany([])

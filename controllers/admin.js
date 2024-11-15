@@ -15,52 +15,34 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  //this will also create a connected model
-  req.user.createProduct(
-    {
-      title: title,
-      price: price,
-      imageUrl: imageUrl,
-      description: description,
-
-    }
-  ).then(
-    result => {
-      console.log(result)
-      res.redirect('/admin/products')
-    }
-  )
-    .catch(error => {
-      console.error(error)
-    })
-
+  
 };
 
-exports.getEditProduct = (req, res, next) => {
+// exports.getEditProduct = (req, res, next) => {
 
-  const editMode = req.query.edit
-  console.log("here editMode", editMode)
-  if (!editMode) {
-    return res.redirect('/')
-  }
-  const prodId = req.params.productId
-  req.user.getProducts({ where: { id: prodId } })
-    // Product.findByPk(prodId)
-    .then(prod => {
-      const prodFound = prod[0]
-      if (!prodFound) {
-        return res.redirect('/')
-      }
+//   const editMode = req.query.edit
+//   console.log("here editMode", editMode)
+//   if (!editMode) {
+//     return res.redirect('/')
+//   }
+//   const prodId = req.params.productId
+//   req.user.getProducts({ where: { id: prodId } })
+//     // Product.findByPk(prodId)
+//     .then(prod => {
+//       const prodFound = prod[0]
+//       if (!prodFound) {
+//         return res.redirect('/')
+//       }
 
-      res.render('admin/edit-product', {
-        pageTitle: 'Edit Product',
-        path: '/admin/edit-product',
-        editing: editMode,
-        product: prodFound
-      })
-    })
-    .catch(err => console.error(err))
-};
+//       res.render('admin/edit-product', {
+//         pageTitle: 'Edit Product',
+//         path: '/admin/edit-product',
+//         editing: editMode,
+//         product: prodFound
+//       })
+//     })
+//     .catch(err => console.error(err))
+// };
 
 exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId

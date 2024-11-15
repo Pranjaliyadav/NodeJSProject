@@ -1,32 +1,24 @@
-const SequelizeInstance = require('sequelize')
+const getDb = require('../util/database').getDb
 
-const sequelize = require('../util/database')
-
-//creating Product table
-const Product = sequelize.define('product', {
-  id: {
-    type: SequelizeInstance.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true
-  },
-  title:
-  {
-    type: SequelizeInstance.STRING,
-    allowNull: false
-  },
-  price: {
-    type: SequelizeInstance.DOUBLE,
-    allowNull: false
-  },
-  imageUrl: {
-    type: SequelizeInstance.STRING,
-    allowNull: false
-  },
-  description: {
-    type: SequelizeInstance.STRING,
-    allowNull: false
+class Product {
+  constructor (title, price, description,imageUrl){
+    this.title = title
+    this.price = price;
+    this.description = description;
+    this.imageUrl = imageUrl;
   }
-})
 
+  save(){
+    const db = getDb()
+    //give collection name, if it doesnt exists it will get created on its own
+    db.collection('products')
+    .insertOne(this)
+    .then(result => {
+      console.log(result)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+}
 module.exports = Product
