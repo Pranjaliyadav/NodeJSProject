@@ -144,6 +144,7 @@ add your ip, by default it will be added and white listed, these whitelisted ip 
  npm i --save mongodb
  pass- xfhsWKnmLqenYFRX
 
+
  doc mongodb crud operation - https://www.mongodb.com/docs/manual/crud/?msockid=1e032706fa4a60dd2ebf35c2fb4c6144
 db.collection('products').insertOne() or .insertMany([])
  const response = await db.collection('products').find({_id : mongoDB.ObjectId(prodId)}).toArray()
@@ -152,3 +153,7 @@ db.collection('products').insertOne() or .insertMany([])
  how to update data
       savedData =  db.collection('products')
       .updateOne({_id :new mongoDB.ObjectId(prodId)},{$set : this})
+
+deleting by id
+    const response = await db.collection('products').deleteOne({_id : new mongoDB.ObjectId(prodId)})
+

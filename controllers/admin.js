@@ -88,10 +88,8 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const productId = req.body.productId
-  Product.findByPk(productId)
-    .then(
-      prod => { return prod.destroy() } //.destroy to delete some row in sqlz
-    )
+ Product.deleteById(productId)
+   
     .then(result => {
       console.log('deleted product')
       res.redirect('/admin/products')
