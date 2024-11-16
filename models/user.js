@@ -24,12 +24,27 @@ class User {
     }
 
     async addToCart(product) {
-        // const cartProuctFound = this.cart.items.findIndex(
-        //     cp =>{
-        //         return cp._id === product._id
-        //     }
-        // )
-        const updatedCart = { items: [{productId : new mongoDb.ObjectId(product._id), quantity: 1 }] }
+        const cartProductFoundIndex = this.cart?.items?.findIndex(
+            cp =>{
+                return cp.productId.toString() === product._id.toString()
+            }
+        ) || -1
+
+        let newQty = 1
+        const updatedCartItems = this.cart?.items ? [...this.cart?.items] : []
+
+        if(cartProductFoundIndex >= 0){
+            newQty = this.cart.items[cartProductFoundIndex].quantity + 1
+            updatedCartItems[cartProductFoundIndex].quantity = newQty
+        }
+        else{
+            updatedCartItems.push({
+                productId : new mongoDb.ObjectId(product._id),
+                quantity : newQty
+            })
+        }
+        const updatedCart = { items:updatedCartItems }
+
         const db = getDb()
         try {
             const response = await db.collection('users')

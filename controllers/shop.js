@@ -62,49 +62,16 @@ exports.postCart = (req, res, next) => {
   const prodId = req.body.productId
   Product.findById(prodId)
   .then(product => {
+    console.log("here request", req.user)
     return req.user.addToCart(product)
   })
   .then(result =>{
     console.log("after adding", result)
+    // res.redirect('/cart')
   })
   .catch(err =>{
     console.log("error adding in cart", err)
   })
-  // let fetchedCart
-  // let newQty = 1
-  // req.user.getCart()
-  //   .then(cart => {
-  //     fetchedCart = cart
-  //     return cart.getProducts({ where: { id: prodId } })
-
-  //   })
-  //   .then(prodFound => {
-  //     let product
-  //     if (prodFound.length > 0) {
-  //       product = prodFound[0]
-  //     }
-
-  //     if (product) {
-  //       const oldQty = product.cartItem.quantity
-  //       newQty = oldQty + 1
-  //       return product
-  //     }
-  //     return Product.findByPk(prodId)
-  //   })
-  //   .then(product => {
-  //     return fetchedCart.addProduct(product, {
-  //       through: { quantity: newQty }
-  //     })
-  //   })
-  //   .then(added => {
-  //     console.log("here added", added)
-  //     res.redirect('/cart')
-
-  //   })
-  //   .catch(err => console.log(err))
-
-
-  //   .catch(err => console.log(err))
 }
 
 exports.getOrders = (req, res, next) => {
