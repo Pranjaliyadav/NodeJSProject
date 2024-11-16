@@ -1,6 +1,6 @@
 const { error } = require('console');
+const mongoDB = require('mongodb')
 const Product = require('../models/product');
-
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
@@ -28,31 +28,31 @@ exports.postAddProduct = (req, res, next) => {
     })
 };
 
-// exports.getEditProduct = (req, res, next) => {
+exports.getEditProduct = (req, res, next) => {
 
-//   const editMode = req.query.edit
-//   console.log("here editMode", editMode)
-//   if (!editMode) {
-//     return res.redirect('/')
-//   }
-//   const prodId = req.params.productId
-//   req.user.getProducts({ where: { id: prodId } })
-//     // Product.findByPk(prodId)
-//     .then(prod => {
-//       const prodFound = prod[0]
-//       if (!prodFound) {
-//         return res.redirect('/')
-//       }
+  const editMode = req.query.edit
+  console.log("here editMode", editMode)
+  if (!editMode) {
+    return res.redirect('/')
+  }
+  const prodId = req.params.productId
+  Product.findById(prodId)
+    // Product.findByPk(prodId)
+    .then(prod => {
+      const prodFound = prod
+      if (!prodFound) {
+        return res.redirect('/')
+      }
 
-//       res.render('admin/edit-product', {
-//         pageTitle: 'Edit Product',
-//         path: '/admin/edit-product',
-//         editing: editMode,
-//         product: prodFound
-//       })
-//     })
-//     .catch(err => console.error(err))
-// };
+      res.render('admin/edit-product', {
+        pageTitle: 'Edit Product',
+        path: '/admin/edit-product',
+        editing: editMode,
+        product: prodFound
+      })
+    })
+    .catch(err => console.error(err))
+};
 
 exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId
@@ -61,13 +61,10 @@ exports.postEditProduct = (req, res, next) => {
   const updatedImageUrl = req.body.imageUrl
   const updatedDescription = req.body.description
 
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then(result => {
-      result.title = updatedTitle
-      result.imageUrl = updatedImageUrl
-      result.price = updatedPrice
-      result.description = updatedDescription
-      return result.save()
+      const product = new Product(updatedTitle, updatedPrice, updatedDescription,updatedImageUrl, prodId)
+      return product.save()
     })
     .then(result => {
       console.log("updated product")

@@ -148,3 +148,7 @@ add your ip, by default it will be added and white listed, these whitelisted ip 
 db.collection('products').insertOne() or .insertMany([])
  const response = await db.collection('products').find({_id : mongoDB.ObjectId(prodId)}).toArray()
  id access like above
+
+ how to update data
+      savedData =  db.collection('products')
+      .updateOne({_id :new mongoDB.ObjectId(prodId)},{$set : this})

@@ -2,24 +2,42 @@ const mongoDB = require('mongodb')
 const getDb = require('../util/database').getDb
 
 class Product {
-  constructor(title, price, description, imageUrl) {
+  constructor(title, price, description, imageUrl,id) {
     this.title = title
     this.price = price;
     this.description = description;
     this.imageUrl = imageUrl;
+    this._id =id ? new mongoDB.ObjectId(id) : null;
   }
 
   save() {
     const db = getDb()
-    //give collection name, if it doesnt exists it will get created on its own
-    return db.collection('products')
-      .insertOne(this)
+    let savedData
+    if(this._id){
+      //update product
+      savedData =  db.collection('products')
+      .updateOne({_id :new mongoDB.ObjectId(this._id)},{$set : this})
       .then(result => {
-        console.log(result, "result")
+        console.log(result, "result 1" )
       })
       .catch(err => {
         console.log(err)
       })
+    }
+    else{
+      savedData =  db.collection('products')
+      .insertOne(this)
+      .then(result => {
+        console.log(result, "result 2" )
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+    return savedData
+   
+    //give collection name, if it doesnt exists it will get created on its own
+    
   }
   static async fetchAll() {
     const db = getDb();
