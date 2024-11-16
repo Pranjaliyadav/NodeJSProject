@@ -60,6 +60,32 @@ class User {
 
     }
 
+    async getCart(){
+        const db = getDb()
+        try{
+            const productIds = this.cart.items.map(rec =>rec.productId)
+
+            const cartItems  =  await db.collection('products').find({_id : {$in : productIds}})
+            .toArray()
+            if(cartItems){
+                return cartItems.map(p =>{
+                    return {...p, quantity : this.cart.items.find(i => {
+                        return i.productId.toString() === p._id.toString()
+                    }).quantity}
+                })
+            }
+            else{
+                return []
+            }
+           
+        }
+        catch(err){
+            console.log("error getting cart",err)
+        }
+       
+      
+    }
+
     static async findById(userId) {
         const db = getDb()
         try {

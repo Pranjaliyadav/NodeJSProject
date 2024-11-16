@@ -157,3 +157,5 @@ db.collection('products').insertOne() or .insertMany([])
 deleting by id
     const response = await db.collection('products').deleteOne({_id : new mongoDB.ObjectId(prodId)})
 
+ const cartItems  =  await db.collection('products').find({_id : {$in : productIds}})
+ $in is like In of typeorm
