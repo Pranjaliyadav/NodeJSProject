@@ -98,6 +98,33 @@ class User {
                 { $set: { cart: { items: updatedCartItem } } })
 
     }
+    async addOrder() {
+        const db = getDb()
+        try {
+            const response = await db.collection('orders')
+                .insertOne(this.cart)
+
+            if (response) {
+                this.cart = { items: [] }
+                try {
+                    const response = db.collection('users')
+                        .updateOne(
+                            { _id: new mongoDb.ObjectId(this._id) },
+                            { $set: { cart: { items: [] } } }
+                        )
+                    
+                    return response
+                }
+                catch (err) {
+                    console.log("error updating cart", err)
+                }
+            }
+        }
+        catch (err) {
+            console.log("error adding cart to order", err)
+        }
+    }
+
     // async deleteQuantityFromCart(productId) {
     //     const db = getDB()
     //     const updatedCartItem = this.cart.items.findOne(rec => rec.productId.toString() === productId.toString())
