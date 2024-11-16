@@ -24,12 +24,13 @@ class User {
     }
 
     async addToCart(product) {
-        const cartProductFoundIndex = this.cart?.items?.findIndex(
-            cp => {
-                return cp.productId.toString() === product._id.toString()
-            }
-        ) || -1
-
+        let cartProductFoundIndex = this.cart?.items?.findIndex(
+            cp => 
+                cp.productId.toString() === product._id.toString()
+            
+        ) 
+        
+    
         let newQty = 1
         const updatedCartItems = this.cart?.items ? [...this.cart?.items] : []
 
@@ -72,7 +73,8 @@ class User {
                     return {
                         ...p, quantity: this.cart.items.find(i => {
                             return i.productId.toString() === p._id.toString()
-                        }).quantity
+                        }).quantity,
+                        userId : this._id
                     }
                 })
             }
@@ -100,29 +102,46 @@ class User {
     }
     async addOrder() {
         const db = getDb()
-        try {
-            const response = await db.collection('orders')
-                .insertOne(this.cart)
+       return await this.getCart()
+            .then(async products => {
 
-            if (response) {
-                this.cart = { items: [] }
+                const order = {
+                    items: products,
+                    user: {
+                        _id: new mongoDb.ObjectId(this._id),
+                        email: this.email,
+                        name: this.name
+                    }
+                }
                 try {
-                    const response = db.collection('users')
-                        .updateOne(
-                            { _id: new mongoDb.ObjectId(this._id) },
-                            { $set: { cart: { items: [] } } }
-                        )
-                    
-                    return response
+                    const response = await db.collection('orders')
+                        .insertOne(order)
+
+                    if (response) {
+                        this.cart = { items: [] }
+                        try {
+                            const response = db.collection('users')
+                                .updateOne(
+                                    { _id: new mongoDb.ObjectId(this._id) },
+                                    { $set: { cart: { items: [] } } }
+                                )
+
+                            return response
+                        }
+                        catch (err) {
+                            console.log("error updating cart", err)
+                        }
+                    }
                 }
                 catch (err) {
-                    console.log("error updating cart", err)
+                    console.log("error adding cart to order", err)
                 }
-            }
-        }
-        catch (err) {
-            console.log("error adding cart to order", err)
-        }
+            })
+
+    }
+
+    async getOrders() {
+
     }
 
     // async deleteQuantityFromCart(productId) {
