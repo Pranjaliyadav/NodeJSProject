@@ -22,18 +22,18 @@ class Product {
         console.log(err)
       })
   }
-
-  static fetchAll() {
-    const db = getDb()
-    return db.collection('products').find().toArray()
-      .then(products => {
-        console.log("products", products)
-      })
-      .catch(err => {
-        console.log("err", err)
-      })
-    //if filteFring
-    // return db.collection('products').find({title : 'jhdskx'})
+  static async fetchAll() {
+    const db = getDb();
+    try {
+      const allProducts = await db.collection('products').find().toArray();
+      console.log("products", allProducts);
+      return allProducts;
+      //if filteFring
+      // return db.collection('products').find({title : 'jhdskx'})
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      throw err; // Propagate the error to the caller
+    }
   }
 
 }

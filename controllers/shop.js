@@ -2,7 +2,9 @@ const Product = require('../models/product');
 
 exports.getProducts = (req, res, next) => {
   //sequelize method to fetch data
-  Product.findAll().then(result => {
+  Product.fetchAll()
+  .then(result => {
+   
     res.render('shop/product-list', {
       prods: result,
       pageTitle: 'All Products',
@@ -30,6 +32,7 @@ exports.getIndex = (req, res, next) => {
   //sequelize method to fetch data
  Product.fetchAll()
   .then(result => {
+    console.log("produc res", result)
     res.render('shop/index', {
       prods: result,
       pageTitle: 'Shop',
