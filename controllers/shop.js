@@ -28,7 +28,8 @@ exports.getProduct = (req, res, next) => {
 exports.getIndex = (req, res, next) => {
 
   //sequelize method to fetch data
-  Product.findAll().then(result => {
+ Product.fetchAll()
+  .then(result => {
     res.render('shop/index', {
       prods: result,
       pageTitle: 'Shop',
