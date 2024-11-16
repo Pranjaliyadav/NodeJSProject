@@ -1,5 +1,4 @@
-const { title } = require('process');
-
+const mongoDB = require('mongodb')
 const getDb = require('../util/database').getDb
 
 class Product {
@@ -33,6 +32,19 @@ class Product {
     } catch (err) {
       console.error("Error fetching products:", err);
       throw err; // Propagate the error to the caller
+    }
+  }
+
+  static async findById(prodId){
+    const db = getDb()
+    try{
+      const response = await db.collection('products').find({_id :new mongoDB.ObjectId(prodId)}).next()
+      console.log("product by id", response)
+      return response
+
+    }
+    catch(err){
+      console.log(err,"error finding product by id")
     }
   }
 
