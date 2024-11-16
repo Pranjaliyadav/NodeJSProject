@@ -25,7 +25,7 @@ class User {
 
     async addToCart(product) {
         const cartProductFoundIndex = this.cart?.items?.findIndex(
-            cp =>{
+            cp => {
                 return cp.productId.toString() === product._id.toString()
             }
         ) || -1
@@ -33,17 +33,17 @@ class User {
         let newQty = 1
         const updatedCartItems = this.cart?.items ? [...this.cart?.items] : []
 
-        if(cartProductFoundIndex >= 0){
+        if (cartProductFoundIndex >= 0) {
             newQty = this.cart.items[cartProductFoundIndex].quantity + 1
             updatedCartItems[cartProductFoundIndex].quantity = newQty
         }
-        else{
+        else {
             updatedCartItems.push({
-                productId : new mongoDb.ObjectId(product._id),
-                quantity : newQty
+                productId: new mongoDb.ObjectId(product._id),
+                quantity: newQty
             })
         }
-        const updatedCart = { items:updatedCartItems }
+        const updatedCart = { items: updatedCartItems }
 
         const db = getDb()
         try {
@@ -60,32 +60,68 @@ class User {
 
     }
 
-    async getCart(){
+    async getCart() {
         const db = getDb()
-        try{
-            const productIds = this.cart.items.map(rec =>rec.productId)
+        try {
+            const productIds = this.cart.items.map(rec => rec.productId)
 
-            const cartItems  =  await db.collection('products').find({_id : {$in : productIds}})
-            .toArray()
-            if(cartItems){
-                return cartItems.map(p =>{
-                    return {...p, quantity : this.cart.items.find(i => {
-                        return i.productId.toString() === p._id.toString()
-                    }).quantity}
+            const cartItems = await db.collection('products').find({ _id: { $in: productIds } })
+                .toArray()
+            if (cartItems) {
+                return cartItems.map(p => {
+                    return {
+                        ...p, quantity: this.cart.items.find(i => {
+                            return i.productId.toString() === p._id.toString()
+                        }).quantity
+                    }
                 })
             }
-            else{
+            else {
                 return []
             }
-           
+
         }
-        catch(err){
-            console.log("error getting cart",err)
+        catch (err) {
+            console.log("error getting cart", err)
         }
-       
-      
+
+
     }
 
+    async deleteFromCart(productId) {
+        const db = getDb()
+        const updatedCartItem = this.cart.items.filter(rec => rec.productId.toString() !== productId.toString())
+
+        return await db.collection('users')
+            .updateOne(
+                { _id: new mongoDb.ObjectId(this._id) },
+                { $set: { cart: { items: updatedCartItem } } })
+
+    }
+    // async deleteQuantityFromCart(productId) {
+    //     const db = getDB()
+    //     const updatedCartItem = this.cart.items.findOne(rec => rec.productId.toString() === productId.toString())
+    //     let cartToSave = []
+    //     if (updatedCartItem) {
+    //         let currQty = updatedCartItem.quantity
+    //         currQty--
+    //         if (currQty > 0) {
+
+    //         }
+    //         else {
+    //             cartToSave = this.cart.items.filter(rec => rec.productId.toString() !== productId.toString())
+
+    //         }
+
+    //         try {
+
+    //         }
+    //         catch (err) {
+    //             console.log("error deleting cart item", err)
+    //         }
+
+    //     }
+    // }
     static async findById(userId) {
         const db = getDb()
         try {
