@@ -1,27 +1,40 @@
-const SequelizeInstance = require('sequelize')
+const { getDb } = require('../util/database')
+const mongoDb = require('mongodb')
 
-const sequelize = require('../util/database')
 
-//creating User table
-const User = sequelize.define('user', {
-    id: {
-        type: SequelizeInstance.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    name:
-    {
-        type: SequelizeInstance.STRING,
-        allowNull: false
-    },
-    email:
-    {
-        type: SequelizeInstance.STRING,
-        allowNull: false
-    },
-   
-})
+class User {
+    constructor(username, email) {
+        this.name = username
+        this.email = email
+    }
+
+    save() {
+        const db = getDb()
+        try {
+            const response = db.collection('users')
+                .insertOne(this)
+            console.log("saved user", response)
+            return response
+        }
+        catch (err) {
+            console.log("error saving user", err)
+        }
+    }
+
+    static async findById(userId) {
+        const db = getDb()
+        try {
+            const response = await db.collection('users')
+                .findOne({ _id: new mongoDb.ObjectId(userId) })
+            console.log("saved user", response)
+            return response
+        }
+        catch (err) {
+            console.log("error finding user", err)
+        }
+    }
+}
+
 
 module.exports = User
 
