@@ -140,8 +140,17 @@ class User {
 
     }
 
-    async getOrders() {
-
+    async getOrdersForUser() {
+        const db = getDb()
+        try{
+            const response = await db.collection('orders')
+            .find({'user._id' : new mongoDb.ObjectId(this._id)})
+            .toArray()
+            return response
+        }
+        catch(err){
+            console.log("error getting order",err)
+        }
     }
 
     // async deleteQuantityFromCart(productId) {

@@ -74,8 +74,9 @@ exports.postCart = (req, res, next) => {
 
 exports.getOrders = (req, res, next) => {
   req.user
-  .getOrders({include : ['products']}) //this include is saying, that while fetching orders, fetch related products as well
+  .getOrdersForUser() 
   .then(orders =>{
+    console.log("here ")
     res.render('shop/orders', {
       path: '/orders',
       pageTitle: 'Your Orders',
