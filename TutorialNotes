@@ -159,3 +159,42 @@ deleting by id
 
  const cartItems  =  await db.collection('products').find({_id : {$in : productIds}})
  $in is like In of typeorm
+
+ Mongoose
+a mongodb odm 
+object document mapping library
+like sql in sequelize but its orm
+docs - https://mongoosejs.com/docs/
+npm i --save mongoose
+
+
+.save() - mongoose method to insert new data
+.find() - to find data
+ //this findById is a mongoose fn, it ill automatically convert your string to objectId string for checking
+  Product.findById(prodId).then
+    Product.findByIdAndDelete(productId)
+    //nested prop
+      cart : {
+        items : [
+            {
+             productId : {type : Schema.Types.ObjectId, required : true},
+             quantity : {type : Number, required : true}
+            }]
+    },
+
+//creating relation bw users and product
+  userId : {
+    type : Schema.Types.ObjectId,
+    //reference of other collection
+    ref : 'User'
+  }
+
+//which keys to select
+  //-_id will exclude _id
+  .select('title price -_id')
+  //populate some key with additional keys instead of just id, like relations's  user id is there, so get other user data as well
+  .populate('userId', 'name')
+
+  //add additonal method
+userSchema.methods.addToCart = async function(product) 
+  Order.find({'user.userId' : req.user._id})

@@ -15,11 +15,19 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  const product = new Product(title, price, description, imageUrl)
+  const product = new Product({
+    title,
+    price,
+    description,
+    imageUrl,
+    userId : req.user
+    //even if u pas whole user, mongoose will pick id only, which can be used as a reference to actual data, like postgres
+  })
+  //.save() is coming from mongoose 
   product.save()
     .then(
       result => {
-        console.log("post add" ,result)
+        console.log("post add", result)
         res.redirect('/admin/products')
       }
     )
@@ -63,8 +71,13 @@ exports.postEditProduct = (req, res, next) => {
 
   Product.findById(prodId)
     .then(result => {
-      const product = new Product(updatedTitle, updatedPrice, updatedDescription,updatedImageUrl, prodId)
-      return product.save()
+
+      result.title = updatedTitle
+      result.price = updatedPrice
+      result.description = updatedDescription
+      result.imageUrl = updatedImageUrl
+
+      return result.save()
     })
     .then(result => {
       console.log("updated product")
@@ -75,9 +88,9 @@ exports.postEditProduct = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
-    // Product.findAll()
+  Product.find()
     .then(result => {
+      console.log("here getproduc", result)
       res.render('admin/products', {
         prods: result,
         pageTitle: 'Admin Products',
@@ -88,8 +101,8 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const productId = req.body.productId
- Product.deleteById(productId)
-   
+  Product.findByIdAndDelete(productId)
+
     .then(result => {
       console.log('deleted product')
       res.redirect('/admin/products')
