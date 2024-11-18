@@ -1,0 +1,79 @@
+how web works
+client request server respose client
+
+program lifecycle and event loop
+non blocking js code event driven code (event loop )  
+exists as soon as no more work to do
+createServer() event never finishes by default
+node js uses callbacks and events
+
+parse request data in chunks streams and buffers
+avoid double responses
+
+nodejs core modules
+http, fs, path, os
+import via require('module')
+
+Node module system
+
+export via module.exports or just exports(for multiple exports)
+
+section 4 summary
+
+npm node package manager
+npm init - initialize project
+production dependencies - --save
+dev dep - --save-dev
+global dep - -g
+
+types of errors
+syntax, runtime, logical
+
+
+section 5
+expressjs - nodejs framework
+framework - package that adds a bunvh og utility fns and tools and a clear set of rules on how the app should be build(middeware)
+Middleware, .next(), res() - middleware function handle a request and should call next()  to forward the request to the next fnsin line 
+or send a responses
+Routing - can use express.Router
+
+
+Section 6
+how to set a template engine - app.set('view engine','ejs')
+ejs, hbs(handlebars), pug
+and  install using npm
+
+
+Section 7
+MVC Pattern
+Model - representing our data, managing data, savig fetching, contains data related logic
+View - what uses sees, shouldn't contain too much logic(handlebars)
+Controller - connects model and view, ake sure both can communicate(in both direction)
+
+
+Section 9
+Dynamic Routing
+pass dyncamic route use  ":"
+whatever is after  : is a param, that you can extract using req.params
+optional query paramerts also be passed ?param=value&b=2, access using req.query.myParam
+
+Section 10
+save(){
+    return db.execut(
+        'INSERT INTO products (title, price, imageUrl, des) VALUES (?,?,?,?)',
+        [this.title, this.price, this.imageUrl, this.description]
+    )
+}
+
+return db.execute('SELECT * FROM products)
+
+
+Section 11
+Sequilize
+SQL uses strict data schema and relations
+connect your nodejs app via package like mysql2
+Sequilize - use packages (ORM) like Sequilize on nodejs code and work
+allows to define models and interact with db thru them
+set up relations(Associations) and interact with related models through them
+
+
