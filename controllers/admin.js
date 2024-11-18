@@ -19,7 +19,9 @@ exports.postAddProduct = (req, res, next) => {
     title,
     price,
     description,
-    imageUrl
+    imageUrl,
+    userId : req.user
+    //even if u pas whole user, mongoose will pick id only, which can be used as a reference to actual data, like postgres
   })
   //.save() is coming from mongoose 
   product.save()
@@ -74,6 +76,7 @@ exports.postEditProduct = (req, res, next) => {
       result.price = updatedPrice
       result.description = updatedDescription
       result.imageUrl = updatedImageUrl
+
       return result.save()
     })
     .then(result => {
@@ -86,7 +89,6 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product.find()
-    // Product.findAll()
     .then(result => {
       console.log("here getproduc", result)
       res.render('admin/products', {

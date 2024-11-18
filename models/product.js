@@ -21,6 +21,13 @@ const productSchema = new Schema({
     required : true,
     type : String
   },
+  //creating relation bw users and product
+  userId : {
+    type : Schema.Types.ObjectId,
+    //reference of other collection
+    ref : 'User',
+    required : true
+  }
 
 })
 

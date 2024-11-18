@@ -182,3 +182,18 @@ npm i --save mongoose
             }]
     },
 
+//creating relation bw users and product
+  userId : {
+    type : Schema.Types.ObjectId,
+    //reference of other collection
+    ref : 'User'
+  }
+
+//which keys to select
+  //-_id will exclude _id
+  .select('title price -_id')
+  //populate some key with additional keys instead of just id, like relations's  user id is there, so get other user data as well
+  .populate('userId', 'name')
+
+  //add additonal method
+userSchema.methods.addToCart = async function(product) {

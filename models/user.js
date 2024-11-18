@@ -14,11 +14,39 @@ const userSchema =new Schema({
     cart : {
         items : [
             {
-             productId : {type : Schema.Types.ObjectId, required : true},
+             productId : {type : Schema.Types.ObjectId, ref : 'Product',required : true},
              quantity : {type : Number, required : true}
             }]
     },
 })
+
+//add additonal method
+userSchema.methods.addToCart = async function(product) {
+    let cartProductFoundIndex = this.cart?.items?.findIndex(
+                    cp => 
+                  cp.productId.toString() === product._id.toString()
+                    
+                ) 
+                
+            
+                let newQty = 1
+                const updatedCartItems = this.cart?.items ? [...this.cart?.items] : []
+        
+                if (cartProductFoundIndex >= 0) {
+                    newQty = this.cart.items[cartProductFoundIndex].quantity + 1
+                    updatedCartItems[cartProductFoundIndex].quantity = newQty
+                }
+                else {
+                    updatedCartItems.push({
+                        productId: product._id,
+                        quantity: newQty
+                    })
+                }
+                const updatedCart = { items: updatedCartItems }
+                this.cart = updatedCart
+               return this.save()
+        
+}
 
 //collection name - users
 module.exports = mongoose.model('User', userSchema)
