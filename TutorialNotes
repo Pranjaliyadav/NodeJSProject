@@ -198,3 +198,5 @@ npm i --save mongoose
   //add additonal method
 userSchema.methods.addToCart = async function(product) 
   Order.find({'user.userId' : req.user._id})
+
+  
