@@ -4,7 +4,7 @@ exports.getLogin = (req, res, next) => {
         .get('Cookie')
         .split(';')[0]
         .trim()
-        .split('=')[1]
+        .split('=')[1] === 'true'
     console.log(req
         .get('Cookie'), 'isLo')
     res.render('auth/login', {
