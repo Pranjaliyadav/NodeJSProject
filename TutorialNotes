@@ -237,3 +237,6 @@ const store = new MongoDBStore({
 
 you can check data in sessions collection in mongodb
 
+
+Module - Authentication
+
