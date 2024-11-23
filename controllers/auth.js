@@ -40,8 +40,19 @@ exports.postLogout = (req, res, next) => {
 };
 
 exports.postSignup = (req, res, next) => {
-   
+   const email = req.body.email
+   const password = req.body.password
+   const confirmedPassword = req.body.confirmPassword
+User.findOne({email : email})
+.then(
+    existed =>
+{
+    
+}
+)
+.catch(err => console.log(err
 
+))
 };
 
 exports.getSignup = (req, res, next) => {
