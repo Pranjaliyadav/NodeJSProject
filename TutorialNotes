@@ -198,3 +198,11 @@ npm i --save mongoose
   //add additonal method
 userSchema.methods.addToCart = async function(product) 
   Order.find({'user.userId' : req.user._id})
+
+    res.setHeader('Set-Cookie','loggedIn=true') //this will set a cookie
+      const isLoggedIn = req
+        .get('Cookie')
+        .split(';')[0]
+        .trim()
+        .split('=')[1]
+        
