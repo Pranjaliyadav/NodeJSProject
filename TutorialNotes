@@ -241,3 +241,8 @@ you can check data in sessions collection in mongodb
 Module - Authentication
 
 for encryption of password - npm i --save bcryptjs
+
+CSRF Attacks 
+Cross Site Request Forgery
+token creation - npm i --save csurf
+
