@@ -21,7 +21,7 @@ exports.postAddProduct = (req, res, next) => {
     price,
     description,
     imageUrl,
-    userId : req.session.user
+    userId : req.user
     //even if u pas whole user, mongoose will pick id only, which can be used as a reference to actual data, like postgres
   })
   //.save() is coming from mongoose 

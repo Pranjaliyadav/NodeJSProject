@@ -10,9 +10,9 @@ const MONGODB_URI = 'mongodb+srv://yadavpranjali1223:xfhsWKnmLqenYFRX@cluster0.e
 const app = express();
 const store = new MongoDBStore({
     //connectin strig, which db to store data
-    uri : MONGODB_URI,
+    uri: MONGODB_URI,
     //collection where session is store
-    collection : 'sessions'
+    collection: 'sessions'
 })
 
 app.set('view engine', 'ejs');
@@ -28,8 +28,21 @@ const User = require('./models/user')
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 //resave means - session will only be saved if something is changed in the session, not on every reload
-app.use(session({secret : 'my secret', resave : false, saveUninitialized : false, store : store}))
+app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }))
 
+app.use((req, res, next) => {
+    if (!req.session.user) {
+       return next()
+    }
+    User.findById(req.session.user._id)
+        .then(
+            user => {
+                req.user = user
+                next()
+            }
+        )
+        .catch(err => console.log(err, "error setting user"))
+})
 
 
 app.use('/admin', adminRoutes);
