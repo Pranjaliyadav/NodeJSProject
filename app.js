@@ -51,22 +51,7 @@ app.use(authRoutes)
 app.use(errorController.get404);
 mongoose.connect(MONGODB_URI)
     .then(result => {
-        //find user if its already there, dont create new users again and again
-        User.findOne().then(
-            user => {
-                if (!user) {
-
-                    const user = new User({
-                        name: 'Pranjali',
-                        email: 'prnj@s.so',
-                        cart: {
-                            items: []
-                        }
-                    })
-                    user.save()
-                }
-            }
-        )
+    
         app.listen(3000)
         console.log("connected to mongoose")
     }

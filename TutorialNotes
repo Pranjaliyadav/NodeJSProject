@@ -240,3 +240,4 @@ you can check data in sessions collection in mongodb
 
 Module - Authentication
 
+for encryption of password - npm i --save bcryptjs
