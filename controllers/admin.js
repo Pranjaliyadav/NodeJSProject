@@ -6,7 +6,7 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: 'Add Product',
     path: '/admin/add-product',
     editing: false,
-    isAuthenticated : req.isLoggedIn
+    isAuthenticated : req.session.isLoggedIn
   });
 };
 
@@ -21,7 +21,7 @@ exports.postAddProduct = (req, res, next) => {
     price,
     description,
     imageUrl,
-    userId : req.user
+    userId : req.session.user
     //even if u pas whole user, mongoose will pick id only, which can be used as a reference to actual data, like postgres
   })
   //.save() is coming from mongoose 
@@ -58,7 +58,7 @@ exports.getEditProduct = (req, res, next) => {
         path: '/admin/edit-product',
         editing: editMode,
         product: prodFound,
-        isAuthenticated : req.isLoggedIn
+        isAuthenticated : req.session.isLoggedIn
       })
     })
     .catch(err => console.error(err))
@@ -97,7 +97,7 @@ exports.getProducts = (req, res, next) => {
         prods: result,
         pageTitle: 'Admin Products',
         path: '/admin/products',
-        isAuthenticated : req.isLoggedIn
+        isAuthenticated : req.session.isLoggedIn
       });
     }).catch(err => console.error(err));
 };

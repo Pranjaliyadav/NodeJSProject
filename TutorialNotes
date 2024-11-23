@@ -197,7 +197,7 @@ npm i --save mongoose
 
   //add additonal method
 userSchema.methods.addToCart = async function(product) 
-  Order.find({'user.userId' : req.user._id})
+  Order.find({'user.userId' : req.session.user._id})
 
     res.setHeader('Set-Cookie','loggedIn=true') //this will set a cookie
       const isLoggedIn = req
@@ -206,3 +206,34 @@ userSchema.methods.addToCart = async function(product)
         .trim()
         .split('=')[1]
         
+    Max time the loggedIn cookie will exist in 1 sesssion
+          res.setHeader('Set-Cookie', 'loggedIn=true; Max-Age=10') //this will set a cookie
+  
+  only https sites will have this cookie
+    res.setHeader('Set-Cookie', 'loggedIn=true; Secure') //this will set a cookie
+    
+    only http site will have this cookie
+  res.setHeader('Set-Cookie', 'loggedIn=true; HttpOnly') //this will set a cookie
+  
+Sessions
+client needs to tell server which session they bleong to
+need to store in data based
+stored in server side
+cookie stored in client side
+
+npm i --save express-session
+
+//resave means - session will only be saved if something is changed in the session, not on every reload
+app.use(session({secret : 'my secret', resave : false, saveUninitialized : false}))
+
+npm i --save connect-mongodb-session
+
+const store = new MongoDBStore({
+    //connectin strig, which db to store data
+    uri : MONGODB_URI,
+    //collection where session is store
+    collection : 'sessions'
+})
+
+you can check data in sessions collection in mongodb
+
