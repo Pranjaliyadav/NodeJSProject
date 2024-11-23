@@ -35,9 +35,9 @@ exports.postLogout = (req, res, next) => {
    req.session.destroy(err =>{
     console.log(err)
     res.redirect('/login')
-   })
+     })
 
-};
+}; 
 
 exports.postSignup = (req, res, next) => {
    const email = req.body.email
@@ -47,7 +47,10 @@ User.findOne({email : email})
 .then(
     existed =>
 {
-    
+    if(existed){
+     return   res.redirect('/signup')
+    }
+
 }
 )
 .catch(err => console.log(err
