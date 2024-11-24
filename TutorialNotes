@@ -247,3 +247,7 @@ Cross Site Request Forgery
 token creation - npm i --save csurf
 
 npm i --save connect-flash
+for displaying error message
+app.use(flash())
+req.flash('error', 'error message')
+'error' is the key
