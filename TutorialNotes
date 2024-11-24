@@ -251,3 +251,10 @@ for displaying error message
 app.use(flash())
 req.flash('error', 'error message')
 'error' is the key
+
+Module - Sending mails
+creating mail server is hard
+so use 3rd party mail service for that
+
+npm i --save nodemailer nodemailer-sendgrid-transport
+
