@@ -1,8 +1,9 @@
 
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
-const crypto = require('crypto')
-require('dotenv').config();
+const crypto = require('crypto') //for creating token
+require('dotenv').config(); //so you can use env variables, otherwise will get undefined
+
 const nodemailer = require('nodemailer')
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 
@@ -188,7 +189,17 @@ exports.postPasswordReset = (req, res, next) =>{
 
         )
         .then(result => {
-            
+            res.redirect('/')
+            transporter.sendMail({
+                to : req.body.email,
+                from : process.env.SENDER_EMAIL,
+                subject : 'Password Reset',
+                html : 
+                `
+                <p>You requested a password reset </p>
+                <p> Click this <a href="http://localhost:3000/reset/${token}" >link</a> to set a new password </p>
+                `
+            })
         })
         .catch(err => {
             console.log(err)
