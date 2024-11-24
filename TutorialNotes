@@ -246,3 +246,4 @@ CSRF Attacks
 Cross Site Request Forgery
 token creation - npm i --save csurf
 
+npm i --save connect-flash

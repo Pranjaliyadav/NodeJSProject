@@ -3,18 +3,11 @@ const session = require('express-session')
 const express = require('express');
 const bodyParser = require('body-parser');
 const MongoDBStore = require('connect-mongodb-session')(session)
-
+const flash = require('connect-flash')
 const errorController = require('./controllers/error');
 const mongoose = require('mongoose')
 const MONGODB_URI = 'mongodb+srv://yadavpranjali1223:xfhsWKnmLqenYFRX@cluster0.epngj.mongodb.net/shop?w=majority&appName=Cluster0'
 const app = express();
-const store = new MongoDBStore({
-    //connectin strig, which db to store data
-    uri: MONGODB_URI,
-    //collection where session is store
-    collection: 'sessions'
-})
-
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -23,6 +16,14 @@ const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 const User = require('./models/user')
 
+
+const store = new MongoDBStore({
+    //connectin strig, which db to store data
+    uri: MONGODB_URI,
+    //collection where session is store
+    collection: 'sessions'
+})
+app.use(flash())
 
 
 app.use(bodyParser.urlencoded({ extended: false }));

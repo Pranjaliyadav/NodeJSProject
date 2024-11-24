@@ -4,12 +4,19 @@ const bcrypt = require('bcryptjs')
 
 
 exports.getLogin = (req, res, next) => {
-    
+    let message = req.flash('error')
+    if(message.length > 0){
+        message = message[0]
+    }
+    else{
+        message = null
+    }
     console.log(req.session.isLoggedIn)
     res.render('auth/login', {
         path: '/login',
-        pageTitle: 'Login', isAuthenticated: false
-    });
+        pageTitle: 'Login', isAuthenticated: false,
+        errorMessage : message
+     });
 
 
 };
@@ -27,6 +34,8 @@ exports.postLogin = (req, res, next) => {
         user => {
 
             if(!user){
+                //'error' is key
+                req.flash('error', 'Invalid email or Password')
                 return res.redirect('/login')
             }
 
