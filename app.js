@@ -1,4 +1,5 @@
 const path = require('path');
+require('dotenv').config();
 const session = require('express-session')
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -6,7 +7,7 @@ const MongoDBStore = require('connect-mongodb-session')(session)
 const flash = require('connect-flash')
 const errorController = require('./controllers/error');
 const mongoose = require('mongoose')
-const MONGODB_URI = 'mongodb+srv://yadavpranjali1223:xfhsWKnmLqenYFRX@cluster0.epngj.mongodb.net/shop?w=majority&appName=Cluster0'
+const MONGODB_URI = process.env.MONGO_DB_CONNECTION_STRING
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'views');

@@ -1,7 +1,17 @@
 
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
+require('dotenv').config();
+const nodemailer = require('nodemailer')
+const sendgridTransport = require('nodemailer-sendgrid-transport');
 
+// we can use this to send email
+const transporter = nodemailer.createTransport(sendgridTransport({
+    auth : {
+        api_key : process.env.SEND_MAIL_API_KEY
+
+    }
+}))
 
 exports.getLogin = (req, res, next) => {
     let message = req.flash('error')
@@ -99,10 +109,21 @@ User.findOne({email : email})
         return user.save()
         
     })
-    
     .then(result => {
-        res.redirect('/login')
+         return  transporter.sendMail({
+            to : email,
+            from : process.env.SENDER_EMAIL,
+            subject : 'Signup succeeded!',
+            html : '<h1>You successfully signed up!</h1>'
+        })
+        .then(result => {
+            res.redirect('/login')
+        })
+        .catch(err => console.log("error sending mail",err
+
+        ))
     })
+    
    
 })
 
