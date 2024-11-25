@@ -14,6 +14,7 @@ router.post('/login',
         check('email')
         .isEmail()
         .withMessage('Please enter a valid email')
+        .normalizeEmail()
         .custom((value, {req})=>{
             return User.findOne({email : value})
              .then(
@@ -29,7 +30,9 @@ router.post('/login',
          body('password',
             'Please enter a valid password with at least 6 characters.' //this is default error message
             )
-            .isLength({min : 6}),
+            .isLength({min : 6})
+            .trim()
+            ,
     ],
     authController.postLogin)
 router.post('/logout', authController.postLogout)
@@ -51,11 +54,15 @@ router.post('/signup',
       
     })
     
-}),
+})
+.normalizeEmail()
+,
 body('password',
 'Please enter a valid password with at least 6 characters.' //this is default error message
 )
-.isLength({min : 6}),
+.isLength({min : 6})
+.trim()
+,
 body('confirmPassword' )
 .custom((value, {req})=>{
     if(value !== req.body.password){
@@ -63,6 +70,7 @@ body('confirmPassword' )
     }
     return true
 })
+.trim()
    
 ]
 , authController.postSignup)
