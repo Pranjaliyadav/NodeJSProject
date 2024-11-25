@@ -3,7 +3,7 @@ const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const crypto = require('crypto') //for creating token
 require('dotenv').config(); //so you can use env variables, otherwise will get undefined
-
+const {validationResult} = require('express-validator') //gives error that check throws
 const nodemailer = require('nodemailer')
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 
@@ -92,6 +92,15 @@ exports.postSignup = (req, res, next) => {
    const email = req.body.email
    const password = req.body.password
    const confirmedPassword = req.body.confirmPassword
+   const validationError = validationResult(req)
+   if(!validationError.isEmpty()){
+    console.log("error array", validationError.array())
+    return res.status(422).render('auth/signup', {
+        path: '/signup',
+        pageTitle: 'Signup', isAuthenticated: false,
+        errorMessage : validationError.array()[0].msg
+    });//indication that validation failed
+   }
 User.findOne({email : email})
 .then(
     existed =>

@@ -258,3 +258,14 @@ so use 3rd party mail service for that
 
 npm i --save nodemailer nodemailer-sendgrid-transport
 
+Module - Validation
+
+validate on client side using js - but it can be disabled from browser
+validate on server side - hidden, so better and safe option.
+
+database validation - mongodb has build in validation, but try to do validation before saving in db
+
+express-validator package will be used
+express-validator
+const { check } = require('express-validator/check')
+check('email').isEmail()
