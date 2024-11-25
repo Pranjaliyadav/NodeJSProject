@@ -95,14 +95,19 @@ exports.postLogout = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
    const email = req.body.email
    const password = req.body.password
-   const confirmedPassword = req.body.confirmPassword
+   const confirmPassword = req.body.confirmPassword
    const validationError = validationResult(req)
    if(!validationError.isEmpty()){
     console.log("error array", validationError.array())
     return res.status(422).render('auth/signup', {
         path: '/signup',
         pageTitle: 'Signup', isAuthenticated: false,
-        errorMessage : validationError.array()[0].msg
+        errorMessage : validationError.array()[0].msg,
+        oldInput : {
+            email,
+            password,
+            confirmPassword
+        }
     });//indication that validation failed
    }
 
@@ -147,7 +152,12 @@ exports.getSignup = (req, res, next) => {
     res.render('auth/signup', {
         path: '/signup',
         pageTitle: 'Signup', isAuthenticated: false,
-        errorMessage : message
+        errorMessage : message,
+        oldInput : {
+            email : "",
+            password : "",
+            confirmPassword : ""
+        }
     });
 };
 
@@ -163,7 +173,8 @@ exports.getPasswordReset = (req, res, next) =>{
         path: '/reset',
         pageTitle: 'Reset Password', 
         isAuthenticated: false,
-        errorMessage : message
+        errorMessage : message,
+
      });
 
 }
