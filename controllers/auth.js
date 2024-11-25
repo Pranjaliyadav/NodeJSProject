@@ -38,21 +38,27 @@ exports.postLogin = (req, res, next) => {
 
     const email = req.body.email
     const password = req.body.password
-
-    User.findOne({email : email})
+    const validationError = validationResult(req)
+    if(!validationError.isEmpty()){
+        console.log("error array", validationError.array())
+        return res.status(422).render('auth/login', {
+            path: '/login',
+            pageTitle: 'Login', isAuthenticated: false,
+            errorMessage : validationError.array()[0].msg
+        });//indication that validation failed
+       }
+       User.findOne({email : email})
   
     
     .then(
         user => {
 
             if(!user){
-                //'error' is key
-                req.flash('error', 'Invalid email or password')
+                
                 return res.redirect('/login')
             }
-
             //decode pass
-            bcrypt.compare(password, user.password)
+          bcrypt.compare(password, user.password)
             .then(
                 matched => {
                     if(matched){
@@ -68,15 +74,13 @@ exports.postLogin = (req, res, next) => {
                     res.redirect('/login')
                 }
             )
+        })
             .catch(err =>{
                 console.log(err)
                 res.redirect('/login')
             })
 
-         
-        }
-    )
-
+    
 };
 
 exports.postLogout = (req, res, next) => {

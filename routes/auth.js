@@ -9,7 +9,29 @@ const User = require('../models/user')
 const { check, body } = require('express-validator')
 
 router.get('/login', authController.getLogin)
-router.post('/login', authController.postLogin)
+router.post('/login',
+    [
+        check('email')
+        .isEmail()
+        .withMessage('Please enter a valid email')
+        .custom((value, {req})=>{
+            return User.findOne({email : value})
+             .then(
+                 existed =>
+             {
+                 if(!existed){
+                   return Promise.reject('Email not found')
+                 }
+               
+             })
+             
+         }),
+         body('password',
+            'Please enter a valid password with at least 6 characters.' //this is default error message
+            )
+            .isLength({min : 6}),
+    ],
+    authController.postLogin)
 router.post('/logout', authController.postLogout)
 router.get('/signup', authController.getSignup)
 router.post('/signup',
@@ -19,7 +41,7 @@ router.post('/signup',
 .isEmail()
 .withMessage('Please enter a valid email')
 .custom((value, {req})=>{
-   return User.findOne({email : req.body.email})
+   return User.findOne({email : value})
     .then(
         existed =>
     {
