@@ -269,3 +269,16 @@ express-validator package will be used
 express-validator
 const { check } = require('express-validator/check')
 check('email').isEmail()
+
+Module - Error handling
+technical/netwrok error - mongodb server down, show error page to user
+expected errors - file cant be read, database operation fails, inform user, possible retry
+bugd/logical errors - user object used whn it doesnt exist, fix during development
+
+working with errors
+
+error is thrown, error is an object
+error page( like 500 page)
+intented page/respose wth error inform
+redirect
+
