@@ -235,3 +235,7 @@ user =>{
 
    
 }
+
+exports.postNewPassword = (req, res, next) =>{
+    
+}
