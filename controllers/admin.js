@@ -1,6 +1,7 @@
 const { error } = require('console');
 const mongoDB = require('mongodb')
 const Product = require('../models/product');
+const product = require('../models/product');
 exports.getAddProduct = (req, res, next) => {
 
   res.render('admin/edit-product', {
@@ -74,24 +75,26 @@ exports.postEditProduct = (req, res, next) => {
 
   Product.findById(prodId)
     .then(result => {
-
+      if(result.userId.toString() !== req.user._id.toString()){
+        return res.redirect('/')
+      }
       result.title = updatedTitle
       result.price = updatedPrice
       result.description = updatedDescription
       result.imageUrl = updatedImageUrl
 
-      return result.save()
+      return result.save().then(result => {
+        console.log("updated product")
+        res.redirect('/admin/products')
+      })
     })
-    .then(result => {
-      console.log("updated product")
-      res.redirect('/admin/products')
-    })
+    
     .catch(err => console.error(err))
 
 }
 
 exports.getProducts = (req, res, next) => {
-  Product.find()
+  Product.find({userId : req.user._id})
     .then(result => {
       console.log("here getproduc", result)
       res.render('admin/products', {
@@ -105,7 +108,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const productId = req.body.productId
-  Product.findByIdAndDelete(productId)
+  Product.deleteOne({_id : productId, userId : req.user._id})
 
     .then(result => {
       console.log('deleted product')
