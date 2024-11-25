@@ -147,9 +147,11 @@ exports.postSignup = (req, res, next) => {
    
 })
 
-.catch(err => console.log("error signup",err
-
-))
+.catch(err=> {
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    return next(error)
+  })
 };
 
 exports.getSignup = (req, res, next) => {
@@ -227,9 +229,11 @@ exports.postPasswordReset = (req, res, next) =>{
                 `
             })
         })
-        .catch(err => {
-            console.log(err)
-        })
+        .catch(err=> {
+            const error = new Error(err)
+            error.httpStatusCode = 500
+            return next(error)
+          })
     })
 }
 
@@ -256,9 +260,11 @@ user =>{
      });
 }
     )
-    .catch(err => {
-        console.log(err,"error fetching user")
-    })
+    .catch(err=> {
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        return next(error)
+      })
 
    
 }
@@ -292,8 +298,10 @@ let resetUser
             `
         })
     })
-    .catch(err => {
-        console.log(err,"error changing password")
-    })
+    .catch(err=> {
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        return next(error)
+      })
 
 }

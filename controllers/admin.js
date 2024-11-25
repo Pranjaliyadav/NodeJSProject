@@ -2,7 +2,8 @@ const { error } = require('console');
 const mongoDB = require('mongodb')
 const Product = require('../models/product');
 const product = require('../models/product');
-const {validationResult} = require('express-validator')
+const {validationResult} = require('express-validator');
+const { default: mongoose } = require('mongoose');
 exports.getAddProduct = (req, res, next) => {
 
   res.render('admin/edit-product', {
@@ -25,7 +26,7 @@ const errors = validationResult(req)
 if(!errors.isEmpty()){
  return res.status(422).render('admin/edit-product', {
     pageTitle: 'Add Product',
-    path: '/admin/edit-product',
+    path: '/admin/add-product',
     editing: false,
     product: {
       title, imageUrl, price, description
@@ -52,8 +53,10 @@ if(!errors.isEmpty()){
         res.redirect('/admin/products')
       }
     )
-    .catch(error => {
-      console.error(error)
+    .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
     })
 };
 
@@ -84,7 +87,11 @@ exports.getEditProduct = (req, res, next) => {
         validationErrors : []
       })
     })
-    .catch(err => console.error(err))
+    .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
+    })
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -128,7 +135,11 @@ exports.postEditProduct = (req, res, next) => {
       })
     })
     
-    .catch(err => console.error(err))
+    .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
+    })
 
 }
 
@@ -142,7 +153,11 @@ exports.getProducts = (req, res, next) => {
         path: '/admin/products',
         isAuthenticated : req.session.isLoggedIn
       });
-    }).catch(err => console.error(err));
+    }) .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
+    })
 };
 
 exports.postDeleteProduct = (req, res, next) => {
@@ -154,6 +169,9 @@ exports.postDeleteProduct = (req, res, next) => {
       res.redirect('/admin/products')
 
     })
-    .catch(err => console.error(err)
-    )
+    .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
+    })
 }
