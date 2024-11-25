@@ -10,7 +10,7 @@ exports.getProducts = (req, res, next) => {
         prods: result,
         pageTitle: 'All Products',
         path: '/products',
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     }).catch(err => console.err(err))
 };
@@ -24,7 +24,7 @@ exports.getProduct = (req, res, next) => {
       res.render('shop/product-detail', {
         product: rows,
         pageTitle: rows?.title,
-        path: '/products', isAuthenticated: req.isLoggedIn
+        path: '/products', isAuthenticated: req.session.isLoggedIn
       });
     }
   ).catch(error => console.log(error));
@@ -39,7 +39,7 @@ exports.getIndex = (req, res, next) => {
       res.render('shop/index', {
         prods: result,
         pageTitle: 'Shop',
-        path: '/', isAuthenticated: req.isLoggedIn
+        path: '/', isAuthenticated: req.session.isLoggedIn
       });
     }).catch(err => console.err(err))
 };
@@ -54,7 +54,7 @@ exports.getCart = (req, res, next) => {
       res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
-        products: cartProducts.cart.items, isAuthenticated: req.isLoggedIn
+        products: cartProducts.cart.items, isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err))
@@ -85,7 +85,7 @@ exports.getOrders = (req, res, next) => {
         path: '/orders',
         pageTitle: 'Your Orders',
         orders: orders,
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
 
     })
@@ -95,7 +95,7 @@ exports.getOrders = (req, res, next) => {
 exports.getCheckout = (req, res, next) => {
   res.render('shop/checkout', {
     path: '/checkout',
-    pageTitle: 'Checkout', isAuthenticated: req.isLoggedIn
+    pageTitle: 'Checkout', isAuthenticated: req.session.isLoggedIn
   });
 
 
@@ -123,7 +123,7 @@ exports.postOrder = (req, res, next) => {
       })
       const order = new Order({
         user: {
-          name: req.user.name,
+          email: req.user.email,
           userId: req.user
         },
         products: products
