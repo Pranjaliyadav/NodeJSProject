@@ -53,8 +53,10 @@ if(!errors.isEmpty()){
         res.redirect('/admin/products')
       }
     )
-    .catch(error => {
-     res.redirect('/500')
+    .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
     })
 };
 
@@ -85,7 +87,11 @@ exports.getEditProduct = (req, res, next) => {
         validationErrors : []
       })
     })
-    .catch(err => console.error(err))
+    .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
+    })
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -129,7 +135,11 @@ exports.postEditProduct = (req, res, next) => {
       })
     })
     
-    .catch(err => console.error(err))
+    .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
+    })
 
 }
 
@@ -143,7 +153,11 @@ exports.getProducts = (req, res, next) => {
         path: '/admin/products',
         isAuthenticated : req.session.isLoggedIn
       });
-    }).catch(err => console.error(err));
+    }) .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
+    })
 };
 
 exports.postDeleteProduct = (req, res, next) => {
@@ -155,6 +169,9 @@ exports.postDeleteProduct = (req, res, next) => {
       res.redirect('/admin/products')
 
     })
-    .catch(err => console.error(err)
-    )
+    .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
+    })
 }
