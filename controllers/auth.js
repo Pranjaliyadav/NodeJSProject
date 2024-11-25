@@ -225,7 +225,8 @@ user =>{
         pageTitle: 'New Password', 
         isAuthenticated: false,
         errorMessage : message,
-        userId : user._id.toString()
+        userId : user._id.toString(),
+        passwordToken : token
      });
 }
     )
@@ -237,5 +238,36 @@ user =>{
 }
 
 exports.postNewPassword = (req, res, next) =>{
-    
+    const newPassword = req.body.password
+    const userId = req.body.userId
+    const passwordToken = req.body.passwordToken
+let resetUser
+    User.findOne({resetToken : passwordToken, resetTokenExpiration: {$gt: Date.now()}, _id : userId})
+    .then(user =>{
+        resetUser = user
+        return bcrypt.hash(newPassword, 12)
+    })
+    .then(hashedPassword =>{
+        resetUser.password = hashedPassword
+        resetUser.resetToken = undefined
+        resetUser.resetTokenExpiration = undefined
+        return resetUser.save()
+    })
+    .then(result =>{
+        res.redirect('/login')
+        transporter.sendMail({
+            to : resetUser.email,
+            from : process.env.SENDER_EMAIL,
+            subject : 'Password has been reset',
+            html : 
+            `
+            <p>Your Password has been updated </p>
+            <p> Click this <a href="http://localhost:3000/login" >link</a> to login </p>
+            `
+        })
+    })
+    .catch(err => {
+        console.log(err,"error changing password")
+    })
+
 }
