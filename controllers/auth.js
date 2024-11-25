@@ -31,7 +31,8 @@ exports.getLogin = (req, res, next) => {
         oldInput : {
             email : "",
             password : "",
-        }
+        },
+        validationErrors : []
      });
 
 
@@ -52,7 +53,8 @@ exports.postLogin = (req, res, next) => {
             oldInput : {
                 email ,
                 password
-            }
+            },
+            validationErrors : validationError.array()
         });//indication that validation failed
        }
        User.findOne({email : email})
@@ -66,7 +68,7 @@ exports.postLogin = (req, res, next) => {
                 return res.redirect('/login')
             }
             //decode pass
-          bcrypt.compare(password, user.password)
+        return  bcrypt.compare(password, user.password)
             .then(
                 matched => {
                     if(matched){
@@ -115,7 +117,8 @@ exports.postSignup = (req, res, next) => {
             email,
             password,
             confirmPassword
-        }
+        },
+        validationErrors : validationError.array()
     });//indication that validation failed
    }
 
@@ -151,6 +154,7 @@ exports.postSignup = (req, res, next) => {
 
 exports.getSignup = (req, res, next) => {
     let message = req.flash('error')
+    const validationError = validationResult(req)
     if(message.length > 0){
         message = message[0]
     }
@@ -165,7 +169,8 @@ exports.getSignup = (req, res, next) => {
             email : "",
             password : "",
             confirmPassword : ""
-        }
+        },
+        validationErrors : []
     });
 };
 
