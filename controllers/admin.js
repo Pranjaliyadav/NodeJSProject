@@ -54,18 +54,7 @@ if(!errors.isEmpty()){
       }
     )
     .catch(error => {
-      return res.status(500).render('admin/edit-product', {
-        pageTitle: 'Add Product',
-        path: '/admin/add-product',
-        editing: false,
-        product: {
-          title, imageUrl, price, description
-        },
-        hasError : true,
-        isAuthenticated : req.session.isLoggedIn,
-        errorMessage : 'Database operation failed, please try again.',
-        validationErrors: []
-      })
+     res.redirect('/500')
     })
 };
 
