@@ -27,7 +27,11 @@ exports.getLogin = (req, res, next) => {
     res.render('auth/login', {
         path: '/login',
         pageTitle: 'Login', isAuthenticated: false,
-        errorMessage : message
+        errorMessage : message,
+        oldInput : {
+            email : "",
+            password : "",
+        }
      });
 
 
@@ -44,7 +48,11 @@ exports.postLogin = (req, res, next) => {
         return res.status(422).render('auth/login', {
             path: '/login',
             pageTitle: 'Login', isAuthenticated: false,
-            errorMessage : validationError.array()[0].msg
+            errorMessage : validationError.array()[0].msg,
+            oldInput : {
+                email ,
+                password
+            }
         });//indication that validation failed
        }
        User.findOne({email : email})
