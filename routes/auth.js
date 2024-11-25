@@ -5,7 +5,7 @@ const router = express.Router();
 
 require('dotenv').config();
 const authController = require('../controllers/auth')
-
+const User = require('../models/user')
 const { check, body } = require('express-validator')
 
 router.get('/login', authController.getLogin)
@@ -19,10 +19,16 @@ router.post('/signup',
 .isEmail()
 .withMessage('Please enter a valid email')
 .custom((value, {req})=>{
-    if(value === process.env.SENDER_EMAIL){
-        throw new Error('This email address is forbidden')
-    }
-    return true
+   return User.findOne({email : req.body.email})
+    .then(
+        existed =>
+    {
+        if(existed){
+          return Promise.reject('Email already exists')
+        }
+      
+    })
+    
 }),
 body('password',
 'Please enter a valid password with at least 6 characters.' //this is default error message

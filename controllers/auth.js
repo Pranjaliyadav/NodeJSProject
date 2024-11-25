@@ -101,14 +101,7 @@ exports.postSignup = (req, res, next) => {
         errorMessage : validationError.array()[0].msg
     });//indication that validation failed
    }
-User.findOne({email : email})
-.then(
-    existed =>
-{
-    if(existed){
-        req.flash('error', 'Email already exist')
-     return  res.redirect('/signup')
-    }
+
    return bcrypt.hash(password, 12) //will generate hash pass, 12 has high security
     .then(hashPass => {
         const user = new User({
@@ -130,11 +123,7 @@ User.findOne({email : email})
         .then(result => {
             res.redirect('/login')
         })
-        .catch(err => console.log("error sending mail",err
-
-        ))
-    })
-    
+      
    
 })
 
