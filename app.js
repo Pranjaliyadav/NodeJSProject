@@ -23,8 +23,8 @@ const store = new MongoDBStore({
     //collection where session is store
     collection: 'sessions'
 })
-app.use(flash())
 
+app.use(flash())
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -38,10 +38,13 @@ const fileStorage = multer.diskStorage({
 
 // File filter for specific MIME types
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
-        cb(null, true);
-    } else {
-        cb(new Error('Invalid file type, only JPG, JPEG, and PNG are allowed!'), false);
+    if(file.mimetype === 'image/png' ||file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg' ){
+
+        cb(null, true)
+    }
+    else{
+        cb(null, false)
+
     }
 };
 
@@ -49,12 +52,12 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({storage : fileStorage , fileFilter : fileFilter}).single('image')) //for parsing image
-// app.use(multer({dest : 'images'}).single('image')) 
-app.use(express.static(path.join(__dirname, 'public')));
 //resave means - session will only be saved if something is changed in the session, not on every reload
 app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }))
 
+app.use(multer({storage : fileStorage , fileFilter : fileFilter}).single('image')) //for parsing image
+// app.use(multer({dest : 'images'}).single('image')) 
+app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
     if (!req.session.user) {
        return next()
@@ -78,14 +81,18 @@ app.use((req, res, next) => {
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes)
+
 app.use('/500',errorController.get500);
 app.use(errorController.get404);
 
-app.use((error, req, res, next)=>{
-    // res.redirect('/500')
-  res.status(500).render('500', { pageTitle: 'Internal Server Error', path: '/500', isAuthenticated : req.session.isLoggedIn });
-
-})
+app.use((error, req, res, next) => {
+    console.error( "file error",error); // Log the error for debugging
+    res.status(500).render('500', {
+        pageTitle: 'Internal Server Error',
+        path: '/500',
+        isAuthenticated: req.session ? req.session.isLoggedIn : false, // Safeguard
+    });
+});
 mongoose.connect(MONGODB_URI)
 
     .then(result => {
