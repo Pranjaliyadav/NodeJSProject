@@ -1,6 +1,9 @@
 const Product = require('../models/product');
-
+const fs = require('fs')
 const Order = require('../models/order');
+const path = require('path')
+const PDFDocument = require('pdfkit')
+
 exports.getProducts = (req, res, next) => {
   //sequelize method to fetch data
   Product.find()
@@ -175,4 +178,58 @@ exports.postOrder = (req, res, next) => {
       error.httpStatusCode = 500
       return next(error)
     })
+}
+
+exports.getInvoice = async (req, res, next) =>{
+  const orderId = req.params.orderId
+  let orders = null
+   await Order.findById(orderId)
+  .then(orderFound => {
+    orders = orderFound
+    console.log("here order", orders)
+    if(!orderFound){
+      return next(new Error('No order found!'))
+    }
+    if(orderFound.user.userId.toString() !== req.user._id.toString()){
+      return next(new Error('Unauthorized'))
+    }
+  })
+  .catch(err => next(err))
+  if(orders){
+
+  }
+  const invoiceName = 'invoice-' + orderId + '.pdf'
+  const invoicePath = path.join('data', 'invoices',invoiceName)
+const pdfDoc = new PDFDocument()
+res.setHeader('Content-Type' , 'application/pdf' )
+res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"' ) //lets you download file as pdf
+
+pdfDoc.pipe(fs.createWriteStream(invoicePath)) //creating writabe stream
+pdfDoc.pipe(res) //creating path and headers
+pdfDoc.fontSize(26).text('Invoice',
+  {
+    underline : true
+  }
+)
+pdfDoc.text('--------------------------------')
+let totalPrice = 0
+orders.products.forEach(element => {
+  totalPrice += (element.quantity*element.product.price)
+  pdfDoc
+  .fontSize(14)
+  .text(
+    element.product.title + 
+    ' - ' + 
+    element.quantity + 
+    ' x ' + 
+    'Rs ' + 
+    element.product.price
+  )
+});
+pdfDoc.text('--------------------------------')
+
+pdfDoc.text('Total Price: Rs ' + totalPrice)
+pdfDoc.end() //telling to stop writing
+
+
 }

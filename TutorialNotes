@@ -424,3 +424,14 @@ helps browser understand if some operation succeeded or not
 511 Network Authentication Required
 
 599 Network Connect Timeout Error
+
+Module - File upload and download
+
+npm i --save multer
+ - file parser
+ app.use(multer({dest : 'images'}).single('image')) 
+ when dest is added, t will store image in a folder
+
+ pdf generation
+ npm i --save pdfkit
+ 
