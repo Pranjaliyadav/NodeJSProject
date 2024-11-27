@@ -9,8 +9,7 @@ const errorController = require('./controllers/error');
 const mongoose = require('mongoose')
 const MONGODB_URI = process.env.MONGO_DB_CONNECTION_STRING
 const app = express();
-app.set('view engine', 'ejs');
-app.set('views', 'views');
+const multer = require('multer')
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -26,8 +25,34 @@ const store = new MongoDBStore({
 })
 app.use(flash())
 
+const fileStorage = multer.diskStorage({
+    destination : (req, file, cb) =>{
+        console.log("here filenma 22", file, req)
+        cb(null,'images')
+    },
+    filename : (req, file, cb) =>{
+        console.log("here filenma 111", file, req)
+        cb(null,'image' + '-' + file.originalname)
+    }
+})
+
+const fileFilter = (req, file, cb) =>{
+    if(file.mimetype === 'image/png' ||file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg' ){
+
+        cb(null, true)
+    }
+    else{
+        cb(null, false)
+
+    }
+
+}
+
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({storage : fileStorage , fileFilter }).single('image')) //for parsing image
 app.use(express.static(path.join(__dirname, 'public')));
 //resave means - session will only be saved if something is changed in the session, not on every reload
 app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }))
@@ -59,12 +84,12 @@ app.use('/500',errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next)=>{
-    // res.redirect('/500')
-  res.status(500).render('500', { pageTitle: 'Internal Server Error', path: '/500', isAuthenticated : req.session.isLoggedIn });
+    res.redirect('/500')
+//   res.status(500).render('500', { pageTitle: 'Internal Server Error', path: '/500', isAuthenticated : req.session.isLoggedIn });
 
 })
-
 mongoose.connect(MONGODB_URI)
+
     .then(result => {
     
         app.listen(3000)
