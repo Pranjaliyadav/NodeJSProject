@@ -193,14 +193,19 @@ exports.getInvoice = (req, res, next) =>{
   .catch(err => next(err))
   const invoiceName = 'invoice-' + orderId + '.pdf'
   const invoicePath = path.join('data', 'invoices',invoiceName)
-  fs.readFile(invoicePath, (err, data)=>{
-    if(err){
-      return next()
-    }
-    res.setHeader('Content-Type' , 'application/pdf' )
+  // fs.readFile(invoicePath, (err, data)=>{
+  //   if(err){
+  //     return next()
+  //   }
+  //   res.setHeader('Content-Type' , 'application/pdf' )
+  //   res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"' ) //lets you download file as pdf
+  //   console.log(data,"here data")
+  //   res.send(data)
+  // })
+  const file = fs.createReadStream(invoicePath)
+  res.setHeader('Content-Type' , 'application/pdf' )
     res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"' ) //lets you download file as pdf
     console.log(data,"here data")
-    res.send(data)
-  })
+  file.pipe(res)
 
 }
