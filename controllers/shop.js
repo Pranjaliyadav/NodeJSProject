@@ -197,10 +197,10 @@ const pdfDoc = new PDFDocument()
 res.setHeader('Content-Type' , 'application/pdf' )
 res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"' ) //lets you download file as pdf
 
-pdfDoc.pipe(fs.createWriteStream(invoicePath))
-pdfDoc.pipe(res)
-pdfDoc.text('Hello world!')
-pdfDoc.end()
+pdfDoc.pipe(fs.createWriteStream(invoicePath)) //creating writabe stream
+pdfDoc.pipe(res) //creating path and headers
+pdfDoc.text('Hello world!') 
+pdfDoc.end() //telling to stop writing
 
 
 }
