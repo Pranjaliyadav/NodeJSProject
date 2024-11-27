@@ -180,17 +180,24 @@ exports.postOrder = (req, res, next) => {
     })
 }
 
-exports.getInvoice = (req, res, next) =>{
+exports.getInvoice = async (req, res, next) =>{
   const orderId = req.params.orderId
-  Order.findById(orderId).then(order => {
-    if(!order){
+  let orders = null
+   await Order.findById(orderId)
+  .then(orderFound => {
+    orders = orderFound
+    console.log("here order", orders)
+    if(!orderFound){
       return next(new Error('No order found!'))
     }
-    if(order.user.userId.toString() !== req.user._id.toString()){
+    if(orderFound.user.userId.toString() !== req.user._id.toString()){
       return next(new Error('Unauthorized'))
     }
   })
   .catch(err => next(err))
+  if(orders){
+
+  }
   const invoiceName = 'invoice-' + orderId + '.pdf'
   const invoicePath = path.join('data', 'invoices',invoiceName)
 const pdfDoc = new PDFDocument()
@@ -199,7 +206,29 @@ res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"' ) /
 
 pdfDoc.pipe(fs.createWriteStream(invoicePath)) //creating writabe stream
 pdfDoc.pipe(res) //creating path and headers
-pdfDoc.text('Hello world!') 
+pdfDoc.fontSize(26).text('Invoice',
+  {
+    underline : true
+  }
+)
+pdfDoc.text('--------------------------------')
+let totalPrice = 0
+orders.products.forEach(element => {
+  totalPrice += (element.quantity*element.product.price)
+  pdfDoc
+  .fontSize(14)
+  .text(
+    element.product.title + 
+    ' - ' + 
+    element.quantity + 
+    ' x ' + 
+    'Rs ' + 
+    element.product.price
+  )
+});
+pdfDoc.text('--------------------------------')
+
+pdfDoc.text('Total Price: Rs ' + totalPrice)
 pdfDoc.end() //telling to stop writing
 
 
