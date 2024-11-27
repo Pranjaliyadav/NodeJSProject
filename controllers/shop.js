@@ -2,7 +2,7 @@ const Product = require('../models/product');
 const fs = require('fs')
 const Order = require('../models/order');
 const path = require('path')
-
+const PDFDocument = require('pdfkit')
 
 exports.getProducts = (req, res, next) => {
   //sequelize method to fetch data
@@ -193,19 +193,14 @@ exports.getInvoice = (req, res, next) =>{
   .catch(err => next(err))
   const invoiceName = 'invoice-' + orderId + '.pdf'
   const invoicePath = path.join('data', 'invoices',invoiceName)
-  // fs.readFile(invoicePath, (err, data)=>{
-  //   if(err){
-  //     return next()
-  //   }
-  //   res.setHeader('Content-Type' , 'application/pdf' )
-  //   res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"' ) //lets you download file as pdf
-  //   console.log(data,"here data")
-  //   res.send(data)
-  // })
-  const file = fs.createReadStream(invoicePath)
-  res.setHeader('Content-Type' , 'application/pdf' )
-    res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"' ) //lets you download file as pdf
-    console.log(data,"here data")
-  file.pipe(res)
+const pdfDoc = new PDFDocument()
+res.setHeader('Content-Type' , 'application/pdf' )
+res.setHeader('Content-Disposition','inline; filename="' + invoiceName + '"' ) //lets you download file as pdf
+
+pdfDoc.pipe(fs.createWriteStream(invoicePath))
+pdfDoc.pipe(res)
+pdfDoc.text('Hello world!')
+pdfDoc.end()
+
 
 }
