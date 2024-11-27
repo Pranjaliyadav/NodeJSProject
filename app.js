@@ -25,34 +25,32 @@ const store = new MongoDBStore({
 })
 app.use(flash())
 
+
 const fileStorage = multer.diskStorage({
-    destination : (req, file, cb) =>{
-        console.log("here filenma 22", file, req)
-        cb(null,'images')
+    destination: (req, file, cb) => {
+        const uploadPath = path.join(__dirname, 'images'); // Ensure the full path is correct
+        cb(null, uploadPath); // Directory where files will be stored
     },
-    filename : (req, file, cb) =>{
-        console.log("here filenma 111", file, req)
-        cb(null,'image' + '-' + file.originalname)
+    filename: (req, file, cb) => {
+        cb(null, 'image-' + Date.now() + path.extname(file.originalname)); // Unique filename
+    },
+});
+
+// File filter for specific MIME types
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+        cb(null, true);
+    } else {
+        cb(new Error('Invalid file type, only JPG, JPEG, and PNG are allowed!'), false);
     }
-})
-
-const fileFilter = (req, file, cb) =>{
-    if(file.mimetype === 'image/png' ||file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg' ){
-
-        cb(null, true)
-    }
-    else{
-        cb(null, false)
-
-    }
-
-}
+};
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({storage : fileStorage , fileFilter }).single('image')) //for parsing image
+app.use(multer({storage : fileStorage , fileFilter : fileFilter}).single('image')) //for parsing image
+// app.use(multer({dest : 'images'}).single('image')) 
 app.use(express.static(path.join(__dirname, 'public')));
 //resave means - session will only be saved if something is changed in the session, not on every reload
 app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }))
@@ -84,8 +82,8 @@ app.use('/500',errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next)=>{
-    res.redirect('/500')
-//   res.status(500).render('500', { pageTitle: 'Internal Server Error', path: '/500', isAuthenticated : req.session.isLoggedIn });
+    // res.redirect('/500')
+  res.status(500).render('500', { pageTitle: 'Internal Server Error', path: '/500', isAuthenticated : req.session.isLoggedIn });
 
 })
 mongoose.connect(MONGODB_URI)
