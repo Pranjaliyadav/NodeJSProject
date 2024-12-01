@@ -3,19 +3,39 @@ const fs = require('fs')
 const Order = require('../models/order');
 const path = require('path')
 const PDFDocument = require('pdfkit')
+const ITEMS_PER_PAGE = 1
+
 
 exports.getProducts = (req, res, next) => {
-  //sequelize method to fetch data
-  Product.find()
-    .then(result => {
-      console.log("here get prod shop", result)
+  const page = +req.query.page || 1
+let totalProducts
+
+Product.find().countDocuments().then(
+  products =>{
+    totalProducts = products
+    return Product.find()
+    .skip((page - 1)* ITEMS_PER_PAGE ) //skip first x amount of records
+    .limit(ITEMS_PER_PAGE) //limit amnt of data we fetch 
+  }
+)
+
+  .then(result => {
+      console.log("produc res", result)
       res.render('shop/product-list', {
         prods: result,
         pageTitle: 'All Products',
         path: '/products',
-        isAuthenticated: req.session.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn,
+        totalProducts,
+        currentPage : page,
+        hasNextPage : ITEMS_PER_PAGE * page < totalProducts,
+        hasPreviousPage : page > 1,
+        nextPage : page + 1,
+        previousPage : page - 1,
+        lastPage : Math.ceil(totalProducts/ ITEMS_PER_PAGE)
       });
-    }) .catch(err=> {
+    }) 
+  .catch(err=> {
       const error = new Error(err)
       error.httpStatusCode = 500
       return next(error)
@@ -42,15 +62,32 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
+  const page = +req.query.page || 1
+let totalProducts
 
-  //sequelize method to fetch data
-  Product.find()
-    .then(result => {
+Product.find().countDocuments().then(
+  products =>{
+    totalProducts = products
+    return Product.find()
+    .skip((page - 1)* ITEMS_PER_PAGE ) //skip first x amount of records
+    .limit(ITEMS_PER_PAGE) //limit amnt of data we fetch 
+  }
+)
+
+  .then(result => {
       console.log("produc res", result)
       res.render('shop/index', {
         prods: result,
         pageTitle: 'Shop',
-        path: '/', isAuthenticated: req.session.isLoggedIn
+        path: '/', 
+        isAuthenticated: req.session.isLoggedIn,
+        totalProducts,
+        currentPage : page,
+        hasNextPage : ITEMS_PER_PAGE * page < totalProducts,
+        hasPreviousPage : page > 1,
+        nextPage : page + 1,
+        previousPage : page - 1,
+        lastPage : Math.ceil(totalProducts/ ITEMS_PER_PAGE)
       });
     }) .catch(err=> {
       const error = new Error(err)
