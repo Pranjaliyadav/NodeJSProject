@@ -441,3 +441,12 @@ npm i --save multer
  Module Async js request
  JSON stands for JavaScript Object Notation and a typically JSON data structure
  
+ Module Payments
+ collect payment method > verify payment method > charge payment method > manage payment > process order in app
+ use stripe
+ so client will enter details , we collect credit card data and then send to stripe servers to verify it
+ upon successful,verif, we get token from stripe, which we'll send to our server(node app)
+ and then create payment data which will again sent to stripe server
+
+ npm i --save stripe
+ 
