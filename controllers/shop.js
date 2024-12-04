@@ -1,10 +1,11 @@
 const Product = require('../models/product');
 const fs = require('fs')
+require('dotenv').config();
 const Order = require('../models/order');
 const path = require('path')
 const PDFDocument = require('pdfkit')
 const ITEMS_PER_PAGE = 1
-
+const stripe = require('stripe')(process.env.STRIPE_KEY)
 
 exports.getProducts = (req, res, next) => {
   const page = +req.query.page || 1
@@ -155,14 +156,101 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getCheckout = (req, res, next) => {
-  res.render('shop/checkout', {
-    path: '/checkout',
-    pageTitle: 'Checkout', isAuthenticated: req.session.isLoggedIn
-  });
+  let products = null
+  let total = 0
+  req.user
+    .populate('cart.items.productId')
+
+    .then(cartProducts => {
+      products = cartProducts.cart.items
+      
+      products.forEach(p => {
+        total += p.quantity * p.productId.price
+      })
+      const lineItems = products.map(p => {
+        return {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: p.productId.title,
+              description: p.productId.description,
+            },
+            unit_amount: p.productId.price * 100, // Stripe expects the amount in cents
+          },
+          quantity: p.quantity,
+        };
+      });
+
+
+      //create session
+      return stripe.checkout.sessions.create({
+        payment_method_types : ['card'],
+        line_items : lineItems,
+        mode: 'payment',
+        success_url : req.protocol + '://' + req.get('host') + '/checkout/success', //like http://localhost:3000/checkout/success
+        cancel_url : req.protocol + '://' + req.get('host') + '/checkout/cancel',
+      })
+
+    
+    })
+    .then(result =>{
+      res.render('shop/checkout', {
+        path: '/checkout',
+        pageTitle: 'Checkout',
+        products,
+         isAuthenticated: req.session.isLoggedIn,
+         totalSum : total,
+         sessionId : result.id
+      });
+    })
+    .catch(err=> {
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      return next(error)
+    })
 
 
 };
+exports.getCheckoutSuccess = (req, res, next) => {
 
+    req.user
+      .populate('cart.items.productId')
+      .then(user => {
+        const products = user.cart.items.map(i => {
+          //with this ._doc, we get all related record data as well for that id from relatons. metadata
+          return { quantity: i.quantity, product: { ...i.productId._doc } }
+        })
+        const order = new Order({
+          user: {
+            email: req.user.email,
+            userId: req.user
+          },
+          products: products
+  
+        })
+        return order.save()
+      })
+  
+      .then(
+        (result) => {
+          return req.user.clearCart()
+  
+        }
+      )
+      .then(
+        (result) => {
+  
+          res.redirect('/orders')
+        }
+      )
+      .catch(err=> {
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        return next(error)
+      })
+  
+
+};
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId
   req.user.deleteFromCart(prodId)
