@@ -449,4 +449,14 @@ npm i --save multer
  and then create payment data which will again sent to stripe server
 
  npm i --save stripe
- 
+
+ Module - Rest APIs
+ GET, POST, PUT, PATCH, DELETE, OPTIONS
+
+ REST principle
+ 1 uniform interface - clearly define API endpoints with clearly defined request + response data structures, like tos and Types
+ Stateless interactions - server and client dont store any connection history, every request is handled separately
+ cacheable - servers may set cahing headers to allow the client to cache responses
+ client-server - server and client are separated, client is not concerned with persistent data Storage
+ layered system - server may forward requested to other APIs
+ code on demand - executable code may be transfeered from server to client
