@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs')
 require('dotenv').config();
 const session = require('express-session')
 const express = require('express');
@@ -8,14 +9,25 @@ const flash = require('connect-flash')
 const errorController = require('./controllers/error');
 const mongoose = require('mongoose')
 const MONGODB_URI = process.env.MONGO_DB_CONNECTION_STRING
-const app = express();
 const multer = require('multer')
-
+const helmet = require('helmet')
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
+const compression = require('compression')
 const User = require('./models/user')
+const morgon = require('morgan')
 
+const app = express();
+
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname, 'access.log'),
+    {flags : 'a'}
+) //logs will be saved in this file
+
+app.use(helmet()) //this adds headers
+app.use(compression()) //compress code for optimzation, css and js will be compressed only
+app.use(morgon('combined', {stream : accessLogStream})) //display browser details with every call of apis
 
 const store = new MongoDBStore({
     //connectin strig, which db to store data
