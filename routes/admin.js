@@ -8,7 +8,7 @@ const router = express.Router();
 
 const isAuth = require('../middleware/is-auth')
 
-const {check, body} = require('express-validator')
+const {check, body} = require('express-validator') //for validation purposes
 
 
 // /admin/add-product => GET

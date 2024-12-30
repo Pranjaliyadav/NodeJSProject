@@ -1,11 +1,11 @@
 
 const User = require('../models/user')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs') //for encrypting password
 const crypto = require('crypto') //for creating token
 require('dotenv').config(); //so you can use env variables, otherwise will get undefined
 const {validationResult} = require('express-validator') //gives error that check throws
-const nodemailer = require('nodemailer')
-const sendgridTransport = require('nodemailer-sendgrid-transport');
+const nodemailer = require('nodemailer') 
+const sendgridTransport = require('nodemailer-sendgrid-transport'); //email sender package
 
 // we can use this to send email
 const transporter = nodemailer.createTransport(sendgridTransport({
