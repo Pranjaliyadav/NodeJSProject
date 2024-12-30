@@ -3,9 +3,9 @@ const fs = require('fs')
 require('dotenv').config();
 const Order = require('../models/order');
 const path = require('path')
-const PDFDocument = require('pdfkit')
+const PDFDocument = require('pdfkit') //pdf generation 
 const ITEMS_PER_PAGE = 1
-const stripe = require('stripe')(process.env.STRIPE_KEY)
+const stripe = require('stripe')(process.env.STRIPE_KEY) //for payments
 
 exports.getProducts = (req, res, next) => {
   const page = +req.query.page || 1

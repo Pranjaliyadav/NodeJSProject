@@ -6,8 +6,9 @@ const {validationResult} = require('express-validator');
 const { default: mongoose } = require('mongoose');
 const fileHelper = require('../util/file')
 
-exports.getAddProduct = (req, res, next) => {
+exports.getAddProduct = (req, res, next) => { //a controller function
 
+  //renders a view and passes data to it, will compile view template like pug ejs or hbs file
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     path: '/admin/add-product',
@@ -91,7 +92,6 @@ exports.getEditProduct = (req, res, next) => {
   }
   const prodId = req.params.productId
   Product.findById(prodId)
-    // Product.findByPk(prodId)
     .then(prod => {
       const prodFound = prod
       if (!prodFound) {

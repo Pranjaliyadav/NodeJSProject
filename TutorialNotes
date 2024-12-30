@@ -472,3 +472,7 @@ npm i --save multer
  openssl req -nodes -new -x509 -keyout server.key -out server.cert
  this command will give private and public ssl keys packaged in a certificate
  
+ Module  - Testing module
+ automated code Testing
+ Mocha to be used here, Chai also to be used and sinon
+ 

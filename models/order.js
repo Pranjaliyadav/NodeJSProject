@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+
+//way to create schema in mongodb
 const ordersSchema = new Schema({
     products : [{
         product : {type : Object, required : true},
@@ -19,4 +21,5 @@ const ordersSchema = new Schema({
     }
 })
 
+//model name
 module.exports = mongoose.model('Order', ordersSchema)
